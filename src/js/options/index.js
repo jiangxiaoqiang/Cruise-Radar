@@ -3,8 +3,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import Setting from './views/Setting.vue';
-import List from './views/List.vue';
 import About from './views/About.vue';
+import Login from './views/Login.vue'
 import { Container, Menu, MenuItem, Aside, Header, Main, Footer, Input, Checkbox, Message, Loading, Collapse, CollapseItem, Button, Progress, Tooltip } from 'element-ui';
 
 Vue.use(VueRouter);
@@ -31,8 +31,8 @@ Vue.config.productionTip = false;
 const routes = [
     { path: '/', redirect: '/setting' },
     { path: '/setting', component: Setting },
-    { path: '/list', component: List },
     { path: '/about', component: About },
+    { path: '/login', component: Login },
 ];
 const router = new VueRouter({
     routes,
