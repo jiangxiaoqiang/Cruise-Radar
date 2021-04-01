@@ -127,6 +127,12 @@ export default {
                 });
             });
         },
+        addRssSubscribe(){
+            chrome.tabs.create({
+                url: 'chrome://extensions/shortcuts'
+            });
+            console.log('dddddddd');
+        },
         toHotkey() {
             chrome.tabs.create({
                 url: 'chrome://extensions/shortcuts'

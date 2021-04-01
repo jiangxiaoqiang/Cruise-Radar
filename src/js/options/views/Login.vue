@@ -10,14 +10,75 @@
             <el-input @change="saveConfig" placeholder="请输入你的密码"></el-input>
         </div>
         <div class="setting-input">
-            <el-button size="medium" @click="toHotkey">登录</el-button>
+            <el-button size="medium" @click="addRssSubscribe">登录</el-button>
         </div>
     </div>
 </template>
 
 <script>
+export default {
+    name: 'Login',
+    data: () => ({
+        loading: true,
+        defaultConfig,
+        config: defaultConfig,
+        time: '',
+        leftTime: '',
+        second: 0,
+        refreshDisabled: false,
+        isChrome: navigator.userAgent.indexOf('Chrome') !== -1,
+        
+    }),
+    methods: {
+        saveConfig() {
+            saveConfig(this.config, () => {
+                this.$message({
+                    message: '保存成功',
+                    type: 'success'
+                });
+            });
+        },
+        addRssSubscribe(url){
+            const req = new XMLHttpRequest();
+            const baseUrl = "http://121.196.199.223:11014/post/sub/source/temp/add";
+            const urlParams = `url=${encodeURI(url)}&userId=7`;
 
+            req.open("POST", baseUrl, true);
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            req.send(urlParams);
 
+            req.onreadystatechange = function() { // Call a function when the state changes.
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    console.log("Got response 200!");
+                }
+            }
+        },
+        toHotkey() {
+            chrome.tabs.create({
+                url: 'chrome://extensions/shortcuts'
+            });
+        },
+        refreshRu() {
+            this.refreshDisabled = true;
+            refreshRules(() => {
+                this.second = 0;
+                this.time = secondToTime(this.second);
+                this.leftTime = secondToTime(this.config.refreshTimeout - this.second);
+                this.refreshDisabled = false;
+            });
+        },
+        refreshTime() {
+            getRulesDate((date) => {
+                this.second = (+new Date - +date) / 1000;
+                this.time = secondToTime(this.second);
+                this.leftTime = secondToTime(this.config.refreshTimeout - this.second);
+                setTimeout(() => {
+                    this.refreshTime();
+                }, 1000);
+            });
+        }
+    }
+}
 </script>
 
 <style lang="less" scoped>

@@ -44,14 +44,7 @@ function generateList(type, list) {
                         ? `<a href="${config.submitto.freshrssDomain.replace(/\/$/, '')}/i/?c=feed&a=add&url_rss=${encodeURI(url)}" class="rss-action rss-submitto-freshrss">订阅到 FreshRSS</a>`
                         : ''
                 }
-                ${config.submitto.feedly ? `<a href="https://feedly.com/i/subscription/feed/${encodeURI(url)}" class="rss-action rss-submitto-feedly">订阅到 Feedly</a>` : ''}
                 ${config.submitto.feedly ? `<a href="http://121.196.199.223:11014/post/sub/source/temp/add?url=${encodeURI(url)}&userId=7" class="rss-action rss-submitto-feedly">订阅到 Cruise</a>` : ''}
-                ${config.submitto.inoreader ? `<a href="https://www.inoreader.com/?add_feed=${encodeURI(url)}" class="rss-action rss-submitto-inoreader">订阅到 Inoreader</a>` : ''}
-                ${config.submitto.feedbin ? `<a href="https://feedbin.com/?subscribe=${encodeURI(url)}" class="rss-action rss-submitto-feedbin">订阅到 Feedbin</a>` : ''}
-                ${config.submitto.theoldreader ? `<a href="https://theoldreader.com/feeds/subscribe?url=${encodeURI(url)}" class="rss-action rss-submitto-theoldreader">订阅到 The Old Reader</a>` : ''}
-                ${config.submitto.feedspub ? `<a href="https://feeds.pub/feed/${encodeURIComponent(url)}" class="rss-action rss-submitto-feedspub">订阅到 Feeds.Pub</a>` : ''}
-                ${config.submitto.bazqux ? `<a href="https://bazqux.com/add?url=${encodeURIComponent(url)}" class="rss-action rss-submitto-bazqux">订阅到 BazQux Reader</a>` : ''}
-                ${config.submitto.local ? `<a href="feed://${url}" class="rss-action rss-submitto-local">订阅到本地阅读器</a>` : ''}`
                 }
             </li>
             `;
