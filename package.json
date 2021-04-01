@@ -1,5 +1,5 @@
 {
-  "name": "rsshub-radar",
+  "name": "cruise-radar",
   "version": "0.0.1",
   "description": "Browser extension to detect available RSS and RSSHub for current page",
   "scripts": {

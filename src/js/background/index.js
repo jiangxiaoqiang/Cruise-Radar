@@ -52,7 +52,7 @@ getConfig((config) => {
         chrome.notifications.create('RSSHubRadarUpdate', {
             type: 'basic',
             iconUrl: './rsshub.png',
-            title: '🎉 RSSHub Radar 更新',
+            title: '🎉 Cruise Radar 更新',
             message: `v${VERSION}，点击查看更新日志`,
         });
         chrome.notifications.onClicked.addListener((id) => {

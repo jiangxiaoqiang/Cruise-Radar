@@ -8,18 +8,18 @@
                 @select="handleSelect">
                 <el-header
                     class="header"
-                    height="80px">RSSHub Radar</el-header>
+                    height="80px">Cruise Radar</el-header>
                 <el-menu-item index="/setting">
                     <i class="el-icon-setting"></i>
                     <span slot="title">设置</span>
                 </el-menu-item>
-                <el-menu-item index="/list">
-                    <i class="el-icon-magic-stick"></i>
-                    <span slot="title">规则列表</span>
-                </el-menu-item>
                 <el-menu-item index="/about">
                     <i class="el-icon-coordinate"></i>
                     <span slot="title">关于</span>
+                </el-menu-item>
+                <el-menu-item index="/login">
+                    <i class="el-icon-coordinate"></i>
+                    <span slot="title">登录</span>
                 </el-menu-item>
                 <el-footer class="footer">版本 v{{ version }}<br>Made with <i style="color:#d43f57">♥</i> by <a target="_blank" href="https://diygod.me">DIYgod</a></el-footer>
             </el-menu>
