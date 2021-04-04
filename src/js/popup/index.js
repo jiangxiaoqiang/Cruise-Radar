@@ -1,10 +1,11 @@
 import '../../css/popup.less';
 import ClipboardJS from 'clipboard';
 import { getConfig } from '../common/config';
-import { subChannel } from '../common/cruise';
+import { subChannel, isAlreadySubChannel } from '../common/cruise';
 import settingIcon from '../../svg/setting.svg';
 import aboutIcon from '../../svg/about.svg';
 import MD5 from 'md5.js';
+import { Message } from 'element-ui';
 let config;
 
 function generateList(type, list) {
@@ -32,11 +33,6 @@ function generateList(type, list) {
                         : `<div class="rss-action rss-copy" data-clipboard-text="${url}">复制</div>`
                 }
                 ${
-                    config.submitto.miniflux && config.submitto.minifluxDomain
-                        ? `<a href="${config.submitto.minifluxDomain.replace(/\/$/, '')}/bookmarklet?uri=${encodeURI(url)}" class="rss-action rss-submitto-miniflux">订阅到 Miniflux</a>`
-                        : ''
-                }
-                ${
                     config.submitto.freshrss && config.submitto.freshrssDomain
                         ? `<a href="${config.submitto.freshrssDomain.replace(/\/$/, '')}/i/?c=feed&a=add&url_rss=${encodeURI(url)}" class="rss-action rss-submitto-freshrss">订阅到 FreshRSS</a>`
                         : ''
@@ -45,14 +41,32 @@ function generateList(type, list) {
                     config.submitto.feedly ? `<a href="http://121.196.199.223:11014/post/sub/source/temp/add?url=${encodeURI(url)}&userId=7" class="rss-action rss-submitto-feedly">订阅到 Cruise</a>` : ''
                 } 
                 ${
-                    config.submitto.feedly ? `<input url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''
-                }      
+                    config.submitto.feedly ? `<input id="${url}" url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''
+                }       
             </li>
             `;
+            chrome.storage.local.get("cruiseSubList", function(result){
+                var isSub = false;
+                var subList = result.cruiseSubList;
+                subList.forEach(item=>{
+                    if(item.subUrl == url){
+                        isSub = true;
+                    }
+                });
+                console.log(isSub);
+                if(isSub){
+                    document.querySelectorAll('input').forEach((ele) => {
+                        if(ele.id == url){
+                            ele.setAttribute('value','已订阅');
+                        }
+                    });
+                }
+            })
         });
         document.querySelector(`.${type} ul`).innerHTML = result;
         document.querySelector(`.${type}`).style.display = 'block';
         document.body.classList.add('something');
+        
     }
 }
 
@@ -108,7 +122,13 @@ chrome.tabs.query(
                     document.querySelectorAll('input').forEach((e)=>{
                         e.addEventListener('click',(innerEvent) =>{
                             innerEvent.preventDefault();
-                            subChannel(e);
+                            //isAlreadySubChannel("dd");
+                            var subText = e.getAttribute('value');
+                            if(subText != '已订阅'){
+                                subChannel(e);
+                            }else{
+                                Message("已订阅此频道");
+                            }
                         });
                     });
                 }

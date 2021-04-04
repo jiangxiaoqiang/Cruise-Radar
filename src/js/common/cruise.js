@@ -1,5 +1,4 @@
-
-
+import { Message } from "element-ui";
 
 export function fetchAuthToken(username,password){
     const req = new XMLHttpRequest();
@@ -26,7 +25,6 @@ export function fetchAuthToken(username,password){
         }
     }
 }
-
 
 export function getCachedAuthToken(times){
     var cachedToken = "";
@@ -66,6 +64,7 @@ export function subChannel(e){
                 var body = req.response;
                 console.log(body);
                 e.setAttribute('value','已订阅');
+                Message("订阅成功");
                 var res = JSON.parse(body);
                 if(res && res.result){
                     // 更新缓存订阅列表
@@ -77,4 +76,19 @@ export function subChannel(e){
             }
         }
     });                          
+}
+
+/**
+ * is already sub channel
+ * @param {*} url 
+ */
+export async function isAlreadySubChannel(url) {
+    var p = new Promise(function(resolve, reject){
+        chrome.storage.local.get("cruiseSubList", function(options){
+            resolve(options.cruiseSubList);
+        })
+    });
+
+    const configOut = await p;
+    console.log(configOut);
 }
