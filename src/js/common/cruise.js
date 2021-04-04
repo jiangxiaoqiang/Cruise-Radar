@@ -19,7 +19,6 @@ export function fetchAuthToken(username,password){
             var res = JSON.parse(body);
             if(res && res.result && res.result.token){
                 var authToken = res.result.token;
-                console.log("token1:" + authToken);
                 chrome.storage.local.set({
                     cruiseToken: authToken
                 });
@@ -36,16 +35,13 @@ export function getCachedAuthToken(times){
     }
     chrome.storage.local.get('cruiseToken', (result) => {
         if (result.cruiseToken) {
-            console.log("tokenstringify:" + JSON.stringify(result));
             cachedToken = JSON.stringify(result);
         } else {
-            console.log("token:wwwww");
             fetchAuthToken("+8615683761628","12345678");
             ++times;
             getCachedAuthToken(times);
         }
     });
-    console.log("cachedToken:" + cachedToken);
     return cachedToken;
 }
 
@@ -55,7 +51,7 @@ export function subChannel(e){
     chrome.storage.local.get('cruiseToken', (result) => {
         var rssUrl = e.getAttribute('url');
         const req = new XMLHttpRequest();
-        const baseUrl = "http://121.196.199.223:11014/post/sub/source/add";
+        const baseUrl = "http://121.196.199.223:11014/post/sub/source/add-by-plugin/";
         const urlParams ={
             subUrl:rssUrl
         }; 
@@ -69,6 +65,15 @@ export function subChannel(e){
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 var body = req.response;
                 console.log(body);
+                e.setAttribute('value','已订阅');
+                var res = JSON.parse(body);
+                if(res && res.result){
+                    // 更新缓存订阅列表
+                    var subList = res.result;
+                    chrome.storage.local.set({
+                        cruiseSubList: subList
+                    });
+                }
             }
         }
     });                          

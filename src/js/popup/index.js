@@ -32,11 +32,6 @@ function generateList(type, list) {
                         : `<div class="rss-action rss-copy" data-clipboard-text="${url}">复制</div>`
                 }
                 ${
-                    config.submitto.ttrss && config.submitto.ttrssDomain
-                        ? `<a href="${config.submitto.ttrssDomain.replace(/\/$/, '')}/public.php?op=subscribe&feed_url=${encodeURI(url)}" class="rss-action rss-submitto-ttrss">订阅到 TTRSS</a>`
-                        : ''
-                }
-                ${
                     config.submitto.miniflux && config.submitto.minifluxDomain
                         ? `<a href="${config.submitto.minifluxDomain.replace(/\/$/, '')}/bookmarklet?uri=${encodeURI(url)}" class="rss-action rss-submitto-miniflux">订阅到 Miniflux</a>`
                         : ''
@@ -50,7 +45,7 @@ function generateList(type, list) {
                     config.submitto.feedly ? `<a href="http://121.196.199.223:11014/post/sub/source/temp/add?url=${encodeURI(url)}&userId=7" class="rss-action rss-submitto-feedly">订阅到 Cruise</a>` : ''
                 } 
                 ${
-                    config.submitto.feedly ? `<input url="${encodeURI(url)}" type="submit" value="添加" class="rss-action rss-submitto-feedly"></input>` : ''
+                    config.submitto.feedly ? `<input url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''
                 }      
             </li>
             `;
