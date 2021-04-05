@@ -36,9 +36,6 @@ function generateList(type, list) {
                     config.submitto.freshrss && config.submitto.freshrssDomain
                         ? `<a href="${config.submitto.freshrssDomain.replace(/\/$/, '')}/i/?c=feed&a=add&url_rss=${encodeURI(url)}" class="rss-action rss-submitto-freshrss">订阅到 FreshRSS</a>`
                         : ''
-                }
-                ${
-                    config.submitto.feedly ? `<a href="http://121.196.199.223:11014/post/sub/source/temp/add?url=${encodeURI(url)}&userId=7" class="rss-action rss-submitto-feedly">订阅到 Cruise</a>` : ''
                 } 
                 ${
                     config.submitto.feedly ? `<input id="${url}" url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''
