@@ -32,7 +32,7 @@ export function getCachedAuthToken(times){
         return "";
     }
     chrome.storage.local.get('cruiseToken', (result) => {
-        if (result.cruiseToken) {
+        if (result.cruiseToken && result.cruiseToken != "") {
             cachedToken = JSON.stringify(result);
         } else {
             fetchAuthToken("+8615683761628","12345678");
@@ -43,7 +43,11 @@ export function getCachedAuthToken(times){
     return cachedToken;
 }
 
-export function subChannel(e){
+export function subChannel(e,retryTimes){
+    if(retryTimes > 3){
+        Message("无法获取用户授权信息，订阅失败");
+        return;
+    }
     getCachedAuthToken(0);
                             
     chrome.storage.local.get('cruiseToken', (result) => {
@@ -62,15 +66,30 @@ export function subChannel(e){
         req.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 var body = req.response;
-                console.log(body);
-                e.setAttribute('value','已订阅');
-                Message("订阅成功");
+                console.log("订阅返回结果："+body);
                 var res = JSON.parse(body);
-                if(res && res.result){
+                if(res && res.statusCode === "904"){
+                    console.log("904");
+                    chrome.storage.local.remove(["cruiseToken"],function(){
+                        var error = chrome.runtime.lastError;
+                        if (error) {
+                            console.error(error);
+                        }
+                        console.log("登录失效，重新尝试登录");
+                        getCachedAuthToken(0);
+                        setTimeout(function(){  }, 3000);
+                        retryTimes++;
+                        subChannel(e,retryTimes);
+                    });
+                }
+                if(res && res.result && res.statusCode === "200"){
                     // 更新缓存订阅列表
                     var subList = res.result;
                     chrome.storage.local.set({
                         cruiseSubList: subList
+                    },function(resp){
+                        e.setAttribute('value','已订阅');
+                        Message("订阅成功");
                     });
                 }
             }

@@ -122,10 +122,9 @@ chrome.tabs.query(
                     document.querySelectorAll('input').forEach((e)=>{
                         e.addEventListener('click',(innerEvent) =>{
                             innerEvent.preventDefault();
-                            //isAlreadySubChannel("dd");
                             var subText = e.getAttribute('value');
                             if(subText != '已订阅'){
-                                subChannel(e);
+                                subChannel(e,0);
                             }else{
                                 Message("已订阅此频道");
                             }
