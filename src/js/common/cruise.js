@@ -62,11 +62,11 @@ export function subChannel(e,retryTimes){
         req.setRequestHeader("token",result.cruiseToken);
         req.setRequestHeader("Content-type", "application/json");
         req.send(JSON.stringify(urlParams));
-        
+        console.info("已发送订阅请求...");
         req.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 var body = req.response;
-                console.log("订阅返回结果："+body);
+                console.info("订阅返回结果："+body);
                 var res = JSON.parse(body);
                 if(res && res.statusCode === "904"){
                     console.log("904");
@@ -75,14 +75,13 @@ export function subChannel(e,retryTimes){
                         if (error) {
                             console.error(error);
                         }
-                        console.log("登录失效，重新尝试登录");
+                        console.error("登录失效，重新尝试登录");
                         getCachedAuthToken(0);
                         setTimeout(function(){  }, 3000);
                         retryTimes++;
                         subChannel(e,retryTimes);
                     });
-                }
-                if(res && res.result && res.statusCode === "200"){
+                }else if(res && res.result && res.statusCode === "200"){
                     // 更新缓存订阅列表
                     var subList = res.result;
                     chrome.storage.local.set({
@@ -91,6 +90,10 @@ export function subChannel(e,retryTimes){
                         e.setAttribute('value','已订阅');
                         Message("订阅成功");
                     });
+                }else{
+                    e.setAttribute('value','订阅');
+                    console.error("订阅出错" + body);
+                    Message("订阅出错," + res.msg);
                 }
             }
         }

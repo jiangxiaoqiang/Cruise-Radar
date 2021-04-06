@@ -120,10 +120,18 @@ chrome.tabs.query(
                         e.addEventListener('click',(innerEvent) =>{
                             innerEvent.preventDefault();
                             var subText = e.getAttribute('value');
-                            if(subText != '已订阅'){
-                                subChannel(e,0);
-                            }else{
+                            if(subText === '已订阅'){
                                 Message("已订阅此频道");
+                                return;
+                            }
+                            if(subText === '处理中'){
+                                Message("请求处理中...");
+                                return;
+                            }
+                            if(subText === '订阅'){
+                                e.setAttribute('value','处理中');
+                                console.info("开始处理订阅...");
+                                subChannel(e,0);
                             }
                         });
                     });
