@@ -1,5 +1,6 @@
 export const defaultConfig = {
     rsshubDomain: 'https://rsshub.app',
+    cruiseApi: 'https://api.poemhub.top',
     rsshubAccessControl: {
         enabled: false,
         accessKey: '',
