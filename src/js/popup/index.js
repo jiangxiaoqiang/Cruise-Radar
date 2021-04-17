@@ -114,7 +114,9 @@ chrome.tabs.query(
                     document.querySelectorAll('input').forEach((e)=>{
                         e.addEventListener('click',(innerEvent) =>{
                             innerEvent.preventDefault();
+                            //subChannelTest(e);
                             var subText = e.getAttribute('value');
+                            subChannel(e,0);
                             if(subText === '已订阅'){
                                 Message("已订阅此频道");
                                 return;
@@ -126,7 +128,8 @@ chrome.tabs.query(
                             if(subText === '订阅'){
                                 e.setAttribute('value','处理中');
                                 console.info("开始处理订阅...");
-                                subChannel(e,0);
+                                
+                                
                             }
                         });
                     });

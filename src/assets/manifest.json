@@ -1,10 +1,5 @@
 {
     "manifest_version": 2,
-    "applications": {
-        "gecko": {
-            "id": "i@diygod.me"
-        }
-    },
     "name": "Cruise Radar",
     "description": "Cruise Radar可以帮助你快速发现和订阅当前网站的RSS",
     "version": "1.6.1",

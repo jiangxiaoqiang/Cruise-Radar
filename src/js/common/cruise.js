@@ -103,6 +103,12 @@ export function composeRequest(e,result){
     handleSub(urlParams, baseUrl, result,e);
 }
 
+export function subChannelTest(e){
+
+    chrome.storage.local.set({ttt:"a"});
+
+}
+
 export function subChannel(e,retryTimes){
     if(retryTimes > 3){
         Message("无法获取用户授权信息，订阅失败");

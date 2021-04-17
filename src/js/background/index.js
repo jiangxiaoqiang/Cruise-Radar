@@ -27,22 +27,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 });
 
-chrome.runtime.onConnect.addListener(port =>{
-    port.onMessage.addListener((msg, sender, sendResponse) => {
-        if (sender.tab && sender.tab.active) {
-            if (msg.text === 'setPageRSS') {
-                handleRSS(msg.feeds, sender.tab.id);
-            } else if (msg.text === 'addPageRSS') {
-                addPageRSS(msg.feed, sender.tab.id);
-            }
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (sender.tab && sender.tab.active) {
+        if (msg.text === 'setPageRSS') {
+            handleRSS(msg.feeds, sender.tab.id);
+        } else if (msg.text === 'addPageRSS') {
+            addPageRSS(msg.feed, sender.tab.id);
         }
-        if (msg.text === 'getAllRSS') {
-            console.info("获取RSS地址：" + getAllRSS(msg.tabId));
-            sendResponse(getAllRSS(msg.tabId));
-        }
-    });
+    }
+    if (msg.text === 'getAllRSS') {
+        console.info("获取RSS地址：" + getAllRSS(msg.tabId));
+        sendResponse(getAllRSS(msg.tabId));
+    }
 });
-
 
 chrome.tabs.onRemoved.addListener((tabId) => {
     removeRSS(tabId);
