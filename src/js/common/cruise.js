@@ -35,11 +35,7 @@ export function fetchAuthTokenEnhance(username,password,e,retryTimes){
     });
 }
 
-export function getUserInfo(e,retryTimes){
-    fetchAuthTokenEnhance("+8615683761628","12345678",e,retryTimes);
-}
-
-export function getUserInfoEnhance(){
+export function getUserInfoEnhance(e,retryTimes){
     chrome.storage.local.get("username",function(resp){
         const userName = resp;
         if(userName === null||userName === ''||userName === undefined){
@@ -73,7 +69,7 @@ export function handleSub(urlParams,baseUrl,result,e){
         console.info("订阅返回结果："+ JSON.stringify(res));
         if(res && (res.statusCode === "904" || res.statusCode === "907")){
             console.error("登录失效，重新尝试登录");
-            getUserInfo(e, retryTimes);
+            getUserInfoEnhance(e, retryTimes);
         }else if(res && res.result && res.statusCode === "200"){
             // 更新缓存订阅列表
             var subList = res.result;
@@ -118,7 +114,7 @@ export function subChannel(e,retryTimes){
                             
     chrome.storage.local.get('cruiseToken', (result) => {
         if(result.cruiseToken == null){
-            result.cruiseToken = getUserInfo(e,retryTimes);
+            result.cruiseToken = getUserInfoEnhance(e,retryTimes);
         }
         composeRequest(e,result);
     });                          

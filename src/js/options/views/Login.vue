@@ -34,15 +34,22 @@ export default {
     }),
     methods: {
         saveConfig() {
-            saveConfig(this.config, () => {
-                this.$message({
-                    message: '保存成功',
-                    type: 'success'
-                });
+            console.log("dddddddddd");
+            chrome.storage.local.set({
+                username: "+8615683761628",
+                password: "12345678"
+            },function(resp){
+                
             });
         },
         addRssSubscribe(url){
-            
+            console.log("dqe43ddddddddd");
+            chrome.storage.local.set({
+                username: "+8615683761628",
+                password: "12345678"
+            },function(resp){
+                
+            });
         },
         toHotkey() {
             chrome.tabs.create({
