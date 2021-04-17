@@ -1,7 +1,7 @@
 import '../../css/popup.less';
 import ClipboardJS from 'clipboard';
 import { getConfig } from '../common/config';
-import { subChannel, isAlreadySubChannel } from '../common/cruise';
+import { subChannel } from '../common/cruise';
 import settingIcon from '../../svg/setting.svg';
 import aboutIcon from '../../svg/about.svg';
 import MD5 from 'md5.js';
@@ -31,11 +31,6 @@ function generateList(type, list) {
                     item.isDocs
                         ? `<a href="${url}" class="rss-action">文档</a>`
                         : `<div class="rss-action rss-copy" data-clipboard-text="${url}">复制</div>`
-                }
-                ${
-                    config.submitto.freshrss && config.submitto.freshrssDomain
-                        ? `<a href="${config.submitto.freshrssDomain.replace(/\/$/, '')}/i/?c=feed&a=add&url_rss=${encodeURI(url)}" class="rss-action rss-submitto-freshrss">订阅到 FreshRSS</a>`
-                        : ''
                 } 
                 ${
                     config.submitto.feedly ? `<input id="${url}" url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''

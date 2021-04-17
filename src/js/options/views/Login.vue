@@ -16,6 +16,9 @@
 </template>
 
 <script>
+
+import { defaultConfig, getConfig, saveConfig } from '../../common/config';
+
 export default {
     name: 'Login',
     data: () => ({
@@ -39,19 +42,7 @@ export default {
             });
         },
         addRssSubscribe(url){
-            const req = new XMLHttpRequest();
-            const baseUrl = "http://121.196.199.223:11014/post/sub/source/temp/add";
-            const urlParams = `url=${encodeURI(url)}&userId=7`;
-
-            req.open("POST", baseUrl, true);
-            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.send(urlParams);
-
-            req.onreadystatechange = function() { // Call a function when the state changes.
-                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                    console.log("Got response 200!");
-                }
-            }
+            
         },
         toHotkey() {
             chrome.tabs.create({

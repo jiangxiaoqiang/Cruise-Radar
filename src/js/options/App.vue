@@ -9,10 +9,6 @@
                 <el-header
                     class="header"
                     height="80px">Cruise Radar</el-header>
-                <el-menu-item index="/setting">
-                    <i class="el-icon-setting"></i>
-                    <span slot="title">设置</span>
-                </el-menu-item>
                 <el-menu-item index="/about">
                     <i class="el-icon-coordinate"></i>
                     <span slot="title">关于</span>
