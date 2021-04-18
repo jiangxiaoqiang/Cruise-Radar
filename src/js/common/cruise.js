@@ -37,13 +37,13 @@ export function fetchAuthTokenEnhance(username,password,e,retryTimes){
 
 export function getUserInfoEnhance(e,retryTimes){
     chrome.storage.local.get("username",function(resp){
-        const userName = resp;
+        const userName = resp.username;
         if(userName === null||userName === ''||userName === undefined){
             Message("请配置用户名");
             return;
         }
         chrome.storage.local.get("password",function(pwres){
-            const password = pwres;
+            const password = pwres.password;
             if(password === null||password === ''||password === undefined){
                 Message("请配置密码");
                 return;
@@ -53,7 +53,7 @@ export function getUserInfoEnhance(e,retryTimes){
     });
 }
 
-export function handleSub(urlParams,baseUrl,result,e){
+export function handleSub(urlParams,baseUrl,result,e,retryTimes){
     fetch(baseUrl,{
         method: 'POST',
         headers:{
@@ -89,14 +89,14 @@ export function handleSub(urlParams,baseUrl,result,e){
     });
 }
 
-export function composeRequest(e,result){
+export function composeRequest(e,result, retryTimes){
     var rssUrl = e.getAttribute('url');
     const apiUrl = defaultConfig.cruiseApi;
     const baseUrl = apiUrl + "/post/sub/source/add-by-plugin/";
     const urlParams ={
         subUrl:rssUrl
     }; 
-    handleSub(urlParams, baseUrl, result,e);
+    handleSub(urlParams, baseUrl, result, e, retryTimes);
 }
 
 export function subChannelTest(e){
@@ -116,7 +116,7 @@ export function subChannel(e,retryTimes){
         if(result.cruiseToken == null){
             result.cruiseToken = getUserInfoEnhance(e,retryTimes);
         }
-        composeRequest(e,result);
+        composeRequest(e, result, retryTimes);
     });                          
 }
 
