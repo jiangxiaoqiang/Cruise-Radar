@@ -2,6 +2,7 @@ import { handleRSS, removeRSS, addPageRSS, getAllRSS } from './utils';
 import { getConfig, saveConfig } from '../common/config';
 
 chrome.tabs.onActivated.addListener((tab) => {
+    return;
     chrome.tabs.sendMessage(
         tab.tabId,
         {
@@ -14,6 +15,9 @@ chrome.tabs.onActivated.addListener((tab) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if(changeInfo && changeInfo.url === 'chrome://newtab/'){
+        return;
+    }
     if (changeInfo.url && tab.active) {
         chrome.tabs.sendMessage(
             tab.id,
