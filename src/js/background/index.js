@@ -59,7 +59,7 @@ getConfig((config) => {
         chrome.notifications.onClicked.addListener((id) => {
             if (id === 'RSSHubRadarUpdate') {
                 chrome.tabs.create({
-                    url: 'https://github.com/DIYgod/RSSHub-Radar/releases',
+                    url: 'https://github.com/jiangxiaoqiang/Cruise-Radar/releases',
                 });
                 chrome.notifications.clear('RSSHubRadarUpdate');
             }

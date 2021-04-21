@@ -70,6 +70,12 @@ chrome.browserAction.setBadgeTextColor &&
     });
 
 function setBadge(tabId) {
+    let pageRss = window.pageRSS[tabId];
+    let pageRssHub = window.pageRSSHub[tabId];
+    let webRssHub = window.websiteRSSHub[tabId];
+    if(pageRss === undefined || pageRssHub === undefined || webRssHub === undefined){
+        return;
+    }
     chrome.browserAction.setBadgeText({
         text: config.notice.badge ? (window.pageRSS[tabId].length + (window.pageRSSHub[tabId] ? window.pageRSSHub[tabId].length : 0) || (window.websiteRSSHub[tabId] && window.websiteRSSHub[tabId].length ? ' ' : '')) + '' : '',
         tabId,

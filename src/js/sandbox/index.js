@@ -1,4 +1,4 @@
-import { getPageRSSHub, getWebsiteRSSHub, getList } from './utils';
+import { getPageRSSHub, getWebsiteRSSHub, getList, isValidHttpUrl } from './utils';
 
 window.getPageRSSHub = getPageRSSHub;
 window.getWebsiteRSSHub = getWebsiteRSSHub;
@@ -17,13 +17,15 @@ window.addEventListener('message', function (event) {
             );
             break;
         case 'getWebsiteRSSHub':
-            event.source.postMessage(
-                {
-                    origin: event.data,
-                    result: getWebsiteRSSHub(event.data.data),
-                },
-                event.origin
-            );
+            if(isValidHttpUrl(event.data.data)){
+                event.source.postMessage(
+                    {
+                        origin: event.data,
+                        result: getWebsiteRSSHub(event.data.data),
+                    },
+                    event.origin
+                );
+            }
             break;
         case 'getList':
             event.source.postMessage(

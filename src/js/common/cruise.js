@@ -66,9 +66,7 @@ export function handleSub(urlParams,baseUrl,result,e,retryTimes){
         return res.json();
     })
     .then(res => {
-        console.info("订阅返回结果："+ JSON.stringify(res));
         if(res && (res.statusCode === "904" || res.statusCode === "907")){
-            console.error("登录失效，重新尝试登录");
             getUserInfoEnhance(e, retryTimes);
         }else if(res && res.result && res.statusCode === "200"){
             // 更新缓存订阅列表
