@@ -38,8 +38,8 @@ function generateList(type, list) {
             </li>
             `;
             chrome.storage.local.get("cruiseSubList", function(result){
-                var isSub = false;
-                var subList = result.cruiseSubList;
+                let isSub = false;
+                let subList = result.cruiseSubList;
                 subList.forEach(item=>{
                     if(item.subUrl == url){
                         isSub = true;

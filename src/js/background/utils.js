@@ -69,6 +69,9 @@ chrome.browserAction.setBadgeTextColor &&
         color: '#fff',
     });
 
+/**
+ * 设置插件RSS订阅源气泡提示文本
+ */
 function setBadge(tabId) {
     chrome.storage.local.get("cruiseSubList", function (result) {
         var subList = result.cruiseSubList;
@@ -85,8 +88,17 @@ function setBadge(tabId) {
     });
 }
 
+/**
+ * 是否订阅过所有频道
+ * 决定提示气泡显示颜色
+ * 如果已经订阅，用户则可直接忽略，节省时间
+ * @param {*} channels 
+ * @param {*} subList 
+ * @returns 
+ */
 function allChannelSubscribed(channels, subList) {
-    if (channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0) {
+    if (channels === undefined || channels.length === 0 || 
+        subList === undefined || subList.length === 0) {
         return false;
     }
     let allSubcribe = true;
