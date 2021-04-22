@@ -45,7 +45,6 @@ function generateList(type, list) {
                         isSub = true;
                     }
                 });
-                console.log(isSub);
                 if(isSub){
                     document.querySelectorAll('input').forEach((ele) => {
                         if(ele.id == url){
@@ -65,6 +64,57 @@ function generateList(type, list) {
 document.querySelector('.icons-setting').innerHTML = settingIcon;
 document.querySelector('.icons-about').innerHTML = aboutIcon;
 
+
+function handleCallback(feeds){     
+    generateList('page-rss', feeds.pageRSS);
+    generateList('page-rsshub', feeds.pageRSSHub);
+    generateList('website-rsshub', feeds.websiteRSSHub);
+
+    const clipboard = new ClipboardJS('.rss-copy');
+    clipboard.on('success', function (e) {
+        e.trigger.innerHTML = '已复制';
+        setTimeout(() => {
+            e.trigger.innerHTML = '复制';
+        }, 1000);
+    });
+
+    document.querySelectorAll('.rss-image').forEach((ele) => {
+        ele.addEventListener('error', function () {
+            this.setAttribute('src', './rsshub.png');
+        });
+    });
+
+    // handle a label click event
+    document.querySelectorAll('a').forEach((ele) => {
+        ele.addEventListener('click', (e) => {
+            e.preventDefault();
+            chrome.tabs.create({
+                url: ele.getAttribute('href'),
+            });
+            window.close();
+        });
+    });
+
+    document.querySelectorAll('input').forEach((e)=>{
+        e.addEventListener('click',(innerEvent) =>{
+            innerEvent.preventDefault();
+            var subText = e.getAttribute('value');
+            if(subText === '已订阅'){
+                Message("已订阅此频道");
+                return;
+            }
+            if(subText === '处理中'){
+                Message("请求处理中...");
+                return;
+            }
+            if(subText === '订阅'){
+                e.setAttribute('value','处理中');
+                subChannel(e,0);
+            }
+        });
+    });
+}
+
 chrome.tabs.query(
     {
         active: true,
@@ -72,7 +122,6 @@ chrome.tabs.query(
     },
     (tabs) => {
         const tabId = tabs[0].id;
-
         getConfig((conf) => {
             config = conf;
             chrome.runtime.sendMessage(
@@ -81,58 +130,7 @@ chrome.tabs.query(
                     text: 'getAllRSS',
                     tabId: tabId,
                 },
-                (feeds) => {
-                    generateList('page-rss', feeds.pageRSS);
-                    generateList('page-rsshub', feeds.pageRSSHub);
-                    generateList('website-rsshub', feeds.websiteRSSHub);
-
-                    const clipboard = new ClipboardJS('.rss-copy');
-                    clipboard.on('success', function (e) {
-                        e.trigger.innerHTML = '已复制';
-                        setTimeout(() => {
-                            e.trigger.innerHTML = '复制';
-                        }, 1000);
-                    });
-
-                    document.querySelectorAll('.rss-image').forEach((ele) => {
-                        ele.addEventListener('error', function () {
-                            this.setAttribute('src', './rsshub.png');
-                        });
-                    });
-
-                    // handle a label click event
-                    document.querySelectorAll('a').forEach((ele) => {
-                        ele.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            chrome.tabs.create({
-                                url: ele.getAttribute('href'),
-                            });
-                            window.close();
-                        });
-                    });
-
-                    document.querySelectorAll('input').forEach((e)=>{
-                        e.addEventListener('click',(innerEvent) =>{
-                            innerEvent.preventDefault();
-                            //subChannelTest(e);
-                            
-                            var subText = e.getAttribute('value');
-                            if(subText === '已订阅'){
-                                Message("已订阅此频道");
-                                return;
-                            }
-                            if(subText === '处理中'){
-                                Message("请求处理中...");
-                                return;
-                            }
-                            if(subText === '订阅'){
-                                e.setAttribute('value','处理中');
-                                console.info("开始处理订阅...");
-                                subChannel(e,0);
-                            }
-                        });
-                    });
-                }
+                (feeds) => {handleCallback(feeds);}
             );
         });
     }
