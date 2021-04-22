@@ -70,12 +70,56 @@ chrome.browserAction.setBadgeTextColor &&
     });
 
 function setBadge(tabId) {
+    chrome.storage.local.get("cruiseSubList", function(result){
+        var subList = result.cruiseSubList;
+        if(subList === undefined || subList.length === 0){
+            setBadgeTextImpl(tabId,'#FF2800');
+            return;
+        }
+        let channels = window.pageRSS[tabId];
+        if(allChannelSubscribed(channels,subList)){
+            setBadgeTextImpl(tabId,'#008000');
+        }else{
+            setBadgeTextImpl(tabId,'#FF2800');
+        }
+    });
+}
+
+function allChannelSubscribed(channels, subList){
+    if(channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0){
+        return false;
+    }
+    let allSubcribe = true;
+    let subListUrl = subList.map(item=>item.subUrl);
+    channels.forEach(channel =>{
+        let isContains = subListUrl.indexOf(channel.url);
+        if(isContains < 0){
+            allSubcribe = false;
+            return allSubcribe;
+        }
+    });
+    return allSubcribe;
+}
+
+function setBadgeTextImpl(tabId,color){
     let pageRssCount = window.pageRSS[tabId]?window.pageRSS[tabId].length:0;
     let pageRSSHubCount = window.pageRSSHub[tabId] ? window.pageRSSHub[tabId].length : 0;
     let websiteRSSHubCount = window.websiteRSSHub[tabId] && window.websiteRSSHub[tabId].length ? ' ' : '';
+    setBackgroundColor(color);
     chrome.browserAction.setBadgeText({
         text: config.notice.badge ? (pageRssCount + pageRSSHubCount || websiteRSSHubCount) + '' : '',
         tabId,
+    });
+}
+
+function setBackgroundColor(color){
+    /* 
+    如果已经订阅频道，显示绿色
+    如果未订阅频道，显示红色
+    有一个URL未订阅即未订阅，所有URL订阅算已订阅
+    */
+    chrome.browserAction.setBadgeBackgroundColor({
+        color: color,
     });
 }
 

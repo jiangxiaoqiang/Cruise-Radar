@@ -4,7 +4,7 @@
   "description": "Browser extension to detect available RSS and RSSHub for current page",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack -w --mode=production --progress --display-error-details --colors",
+    "dev": "webpack -w --mode=development --progress --display-error-details --colors",
     "build": "webpack --mode=production --progress --display-error-details --colors",
     "release": "npm run build && zip -r release/radar.zip dist",
     "format": "eslint \"**/*.js\" --fix && prettier \"**/*.{js,scss,less}\" --write",

@@ -4,6 +4,20 @@ export function secondToTime(second) {
     return `${hour ? hour + '小时' : ''}${min}分钟`;
 }
 
+export function allChannelSubscribed(channels, subList){
+    if(channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0){
+        return false;
+    }
+    let allSubcribe = true;
+    channels.forEach(channel =>{
+        if(subList.indexOf(channel) < 0){
+            allSubcribe = false;
+            return allSubcribe;
+        }
+    });
+    return allSubcribe;
+}
+
 const iframe = document.querySelector('#sandbox');
 const returnResults = [];
 window.addEventListener('message', (event) => {

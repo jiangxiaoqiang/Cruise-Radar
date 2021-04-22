@@ -2,7 +2,6 @@ import { handleRSS, removeRSS, addPageRSS, getAllRSS } from './utils';
 import { getConfig, saveConfig } from '../common/config';
 
 chrome.tabs.onActivated.addListener((tab) => {
-    return;
     chrome.tabs.sendMessage(
         tab.tabId,
         {
@@ -40,7 +39,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }
     }
     if (msg.text === 'getAllRSS') {
-        console.info("获取RSS地址：" + getAllRSS(msg.tabId));
         sendResponse(getAllRSS(msg.tabId));
     }
 });
