@@ -54,8 +54,10 @@ function generateList(type, list) {
                 }
             })
         });
-        document.querySelector(`.${type} ul`).innerHTML = result;
-        document.querySelector(`.${type}`).style.display = 'block';
+        if(document.querySelector(`.${type} ul`)){
+            document.querySelector(`.${type} ul`).innerHTML = result;
+            document.querySelector(`.${type}`).style.display = 'block';
+        }
         document.body.classList.add('something');
         
     }
@@ -124,6 +126,7 @@ chrome.tabs.query(
         const tabId = tabs[0].id;
         getConfig((conf) => {
             config = conf;
+            // 向background发送消息获取所有RSS地址
             chrome.runtime.sendMessage(
                 null,
                 {
