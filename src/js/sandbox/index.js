@@ -17,7 +17,7 @@ window.addEventListener('message', function (event) {
             );
             break;
         case 'getWebsiteRSSHub':
-            if(isValidHttpUrl(event.data.data)){
+            if (isValidHttpUrl(event.data.data)) {
                 event.source.postMessage(
                     {
                         origin: event.data,

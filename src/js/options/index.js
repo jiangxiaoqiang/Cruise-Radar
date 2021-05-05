@@ -3,7 +3,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import About from './views/About.vue';
-import Login from './views/Login.vue'
+import Login from './views/Login.vue';
 import { Container, Menu, MenuItem, Aside, Header, Main, Footer, Input, Checkbox, Message, Loading, Collapse, CollapseItem, Button, Progress, Tooltip } from 'element-ui';
 
 Vue.use(VueRouter);

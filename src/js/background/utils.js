@@ -73,13 +73,13 @@ chrome.browserAction.setBadgeTextColor &&
  * 设置插件RSS订阅源气泡提示文本
  */
 function setBadge(tabId) {
-    chrome.storage.local.get("cruiseSubList", function (result) {
-        var subList = result.cruiseSubList;
+    chrome.storage.local.get('cruiseSubList', function (result) {
+        const subList = result.cruiseSubList;
         if (subList === undefined || subList.length === 0) {
             setBadgeTextImpl(tabId, '#FF2800');
             return;
         }
-        let channels = window.pageRSS[tabId];
+        const channels = window.pageRSS[tabId];
         if (allChannelSubscribed(channels, subList)) {
             setBadgeTextImpl(tabId, '#008000');
         } else {
@@ -92,19 +92,18 @@ function setBadge(tabId) {
  * 是否订阅过所有频道
  * 决定提示气泡显示颜色
  * 如果已经订阅，用户则可直接忽略，节省时间
- * @param {*} channels 
- * @param {*} subList 
- * @returns 
+ * @param {*} channels
+ * @param {*} subList
+ * @returns
  */
 function allChannelSubscribed(channels, subList) {
-    if (channels === undefined || channels.length === 0 || 
-        subList === undefined || subList.length === 0) {
+    if (channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0) {
         return false;
     }
     let allSubcribe = true;
-    let subListUrl = subList.map(item => item.subUrl);
-    channels.forEach(channel => {
-        let isContains = subListUrl.indexOf(channel.url);
+    const subListUrl = subList.map((item) => item.subUrl);
+    channels.forEach((channel) => {
+        const isContains = subListUrl.indexOf(channel.url);
         if (isContains < 0) {
             allSubcribe = false;
             return allSubcribe;
@@ -114,9 +113,9 @@ function allChannelSubscribed(channels, subList) {
 }
 
 function setBadgeTextImpl(tabId, color) {
-    let pageRssCount = window.pageRSS[tabId] ? window.pageRSS[tabId].length : 0;
-    let pageRSSHubCount = window.pageRSSHub[tabId] ? window.pageRSSHub[tabId].length : 0;
-    let websiteRSSHubCount = window.websiteRSSHub[tabId] && window.websiteRSSHub[tabId].length ? ' ' : '';
+    const pageRssCount = window.pageRSS[tabId] ? window.pageRSS[tabId].length : 0;
+    const pageRSSHubCount = window.pageRSSHub[tabId] ? window.pageRSSHub[tabId].length : 0;
+    const websiteRSSHubCount = window.websiteRSSHub[tabId] && window.websiteRSSHub[tabId].length ? ' ' : '';
     setBackgroundColor(color);
     chrome.browserAction.setBadgeText({
         text: config.notice.badge ? (pageRssCount + pageRSSHubCount || websiteRSSHubCount) + '' : '',
@@ -125,7 +124,7 @@ function setBadgeTextImpl(tabId, color) {
 }
 
 function setBackgroundColor(color) {
-    /* 
+    /*
     如果已经订阅频道，显示绿色
     如果未订阅频道，显示红色
     有一个URL未订阅即未订阅，所有URL订阅算已订阅

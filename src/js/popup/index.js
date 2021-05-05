@@ -27,47 +27,39 @@ function generateList(type, list) {
                     <div class="rss-title">${item.title}</div>
                     <div class="rss-url">${url.replace('https://', '').replace('http://', '')}</div>
                 </a>
-                ${
-                    item.isDocs
-                        ? `<a href="${url}" class="rss-action">文档</a>`
-                        : `<div class="rss-action rss-copy" data-clipboard-text="${url}">复制</div>`
-                } 
-                ${
-                    config.submitto.feedly ? `<input id="${url}" url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''
-                }       
+                ${item.isDocs ? `<a href="${url}" class="rss-action">文档</a>` : `<div class="rss-action rss-copy" data-clipboard-text="${url}">复制</div>`} 
+                ${config.submitto.feedly ? `<input id="${url}" icon="${item.image}" url="${encodeURI(url)}" type="submit" value="订阅" class="rss-action rss-submitto-feedly"></input>` : ''}       
             </li>
             `;
-            chrome.storage.local.get("cruiseSubList", function(result){
+            chrome.storage.local.get('cruiseSubList', function (result) {
                 let isSub = false;
-                let subList = result.cruiseSubList;
-                subList.forEach(item=>{
-                    if(item.subUrl == url){
+                const subList = result.cruiseSubList;
+                subList.forEach((item) => {
+                    if (item.subUrl == url) {
                         isSub = true;
                     }
                 });
-                if(isSub){
+                if (isSub) {
                     document.querySelectorAll('input').forEach((ele) => {
-                        if(ele.id == url){
-                            ele.setAttribute('value','已订阅');
+                        if (ele.id == url) {
+                            ele.setAttribute('value', '已订阅');
                         }
                     });
                 }
-            })
+            });
         });
-        if(document.querySelector(`.${type} ul`)){
+        if (document.querySelector(`.${type} ul`)) {
             document.querySelector(`.${type} ul`).innerHTML = result;
             document.querySelector(`.${type}`).style.display = 'block';
         }
         document.body.classList.add('something');
-        
     }
 }
 
 document.querySelector('.icons-setting').innerHTML = settingIcon;
 document.querySelector('.icons-about').innerHTML = aboutIcon;
 
-
-function handleCallback(feeds){     
+function handleCallback(feeds) {
     generateList('page-rss', feeds.pageRSS);
     generateList('page-rsshub', feeds.pageRSSHub);
     generateList('website-rsshub', feeds.websiteRSSHub);
@@ -97,21 +89,21 @@ function handleCallback(feeds){
         });
     });
 
-    document.querySelectorAll('input').forEach((e)=>{
-        e.addEventListener('click',(innerEvent) =>{
+    document.querySelectorAll('input').forEach((e) => {
+        e.addEventListener('click', (innerEvent) => {
             innerEvent.preventDefault();
-            var subText = e.getAttribute('value');
-            if(subText === '已订阅'){
-                Message("已订阅此频道");
+            const subText = e.getAttribute('value');
+            if (subText === '已订阅') {
+                Message('已订阅此频道');
                 return;
             }
-            if(subText === '处理中'){
-                Message("请求处理中...");
+            if (subText === '处理中') {
+                Message('请求处理中...');
                 return;
             }
-            if(subText === '订阅'){
-                e.setAttribute('value','处理中');
-                subChannel(e,0);
+            if (subText === '订阅') {
+                e.setAttribute('value', '处理中');
+                subChannel(e, 0);
             }
         });
     });
@@ -133,7 +125,9 @@ chrome.tabs.query(
                     text: 'getAllRSS',
                     tabId: tabId,
                 },
-                (feeds) => {handleCallback(feeds);}
+                (feeds) => {
+                    handleCallback(feeds);
+                }
             );
         });
     }

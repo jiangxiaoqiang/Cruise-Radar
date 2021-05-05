@@ -14,7 +14,7 @@ chrome.tabs.onActivated.addListener((tab) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if(changeInfo && changeInfo.url === 'chrome://newtab/'){
+    if (changeInfo && changeInfo.url === 'chrome://newtab/') {
         return;
     }
     if (changeInfo.url && tab.active) {

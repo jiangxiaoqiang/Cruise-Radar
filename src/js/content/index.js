@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse(getPageRSS());
     } else if (msg.text === 'getHTML') {
         sendResponse(document.documentElement.innerHTML);
-    }else{
+    } else {
         sendResponse(document.documentElement.innerHTML);
     }
 });

@@ -108,7 +108,6 @@ export function getPageRSS() {
             if (html) {
                 rssParser.parseString(html, (err, result) => {
                     if (!err) {
-                    
                         chrome.runtime.sendMessage(null, {
                             text: 'addPageRSS',
                             feed: {
