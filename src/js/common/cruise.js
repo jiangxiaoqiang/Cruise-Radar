@@ -1,23 +1,23 @@
 import { Message } from 'element-ui';
 import { defaultConfig } from '../common/config';
-import FingerprintJS from '@fingerprintjs/fingerprintjs'
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
-export function getDeviceFingerPrint(userName, password, e, retryTimes){
+export function getDeviceFingerPrint(userName, password, e, retryTimes) {
     // Initialize an agent at application startup.
     const fpPromise = FingerprintJS.load();
 
     // Get the visitor identifier when you need it.
     fpPromise
-      .then(fp => fp.get())
-      .then(result => {
-        // This is the visitor identifier:
-        const visitorId = result.visitorId;
-        console.log(visitorId);
-        fetchAuthTokenEnhance(userName, password, e, retryTimes,visitorId);
-      })
+        .then((fp) => fp.get())
+        .then((result) => {
+            // This is the visitor identifier:
+            const visitorId = result.visitorId;
+            console.log(visitorId);
+            fetchAuthTokenEnhance(userName, password, e, retryTimes, visitorId);
+        });
 }
 
-export function fetchAuthTokenEnhance(username, password, e, retryTimes,deviceId) {
+export function fetchAuthTokenEnhance(username, password, e, retryTimes, deviceId) {
     const apiUrl = defaultConfig.cruiseApi;
     const baseUrl = apiUrl + '/post/user/login';
     const urlParams = {
@@ -25,7 +25,7 @@ export function fetchAuthTokenEnhance(username, password, e, retryTimes,deviceId
         password: password,
         deviceId: deviceId,
         app: 1,
-        deviceType: 7
+        deviceType: 7,
     };
     fetch(baseUrl, {
         method: 'POST',
