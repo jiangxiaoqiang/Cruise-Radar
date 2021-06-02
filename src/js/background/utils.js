@@ -80,12 +80,44 @@ function setBadge(tabId) {
             return;
         }
         const channels = window.pageRSS[tabId];
+        if(havingChannelUnsubscribed(channels,subList)){
+            setBadgeTextImpl(tabId, '#E1E100');
+            return;
+        }
         if (allChannelSubscribed(channels, subList)) {
             setBadgeTextImpl(tabId, '#008000');
         } else {
             setBadgeTextImpl(tabId, '#FF2800');
         }
     });
+}
+
+/**
+ * 是否包含订阅后又取消订阅的频道
+ * 决定提示气泡显示颜色
+ * 订阅后又取消订阅显示黄色
+ * 只要包含任意一个订阅后取消订阅显示黄色
+ * @param {*} channels
+ * @param {*} subList
+ * @returns
+ */
+ function havingChannelUnsubscribed(channels, subList) {
+    if (channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0) {
+        return false;
+    }
+    let havingUnsubcribe = false;
+    const subListUrl = subList.map((item) => item.subUrl);
+    channels.forEach((channel) => {
+        const isContains = subListUrl.indexOf(channel.url);
+        if (isContains > 0) {
+            var subListItem = subList.find(item=>item.subUrl === channel.url);
+            if(subListItem.userSubStatus === -1){
+                havingUnsubcribe = true;
+                return;
+            }
+        }
+    });
+    return havingUnsubcribe;
 }
 
 /**
@@ -127,6 +159,8 @@ function setBackgroundColor(color) {
     /*
     如果已经订阅频道，显示绿色
     如果未订阅频道，显示红色
+    如果有订阅后又取消订阅的频道，显示黄色
+    又任意一个订阅后又取消订阅的频道即显示黄色
     有一个URL未订阅即未订阅，所有URL订阅算已订阅
     */
     chrome.browserAction.setBadgeBackgroundColor({
