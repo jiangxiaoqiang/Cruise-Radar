@@ -81,7 +81,7 @@ function setBadge(tabId) {
         }
         const channels = window.pageRSS[tabId];
         if(havingChannelUnsubscribed(channels,subList)){
-            setBadgeTextImpl(tabId, '#FFFF00');
+            setBadgeTextImpl(tabId, '#E1E100');
             return;
         }
         if (allChannelSubscribed(channels, subList)) {
@@ -111,8 +111,9 @@ function setBadge(tabId) {
         const isContains = subListUrl.indexOf(channel.url);
         if (isContains > 0) {
             var subListItem = subList.find(item=>item.subUrl === channel.url);
-            if(subListItem.subStatus === 0){
-                return true;
+            if(subListItem.userSubStatus === -1){
+                havingUnsubcribe = true;
+                return;
             }
         }
     });
