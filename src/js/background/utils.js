@@ -128,7 +128,7 @@ function setBadge(tabId) {
  * @param {*} subList
  * @returns
  */
-function allChannelSubscribed(channels, subList) {
+ function allChannelSubscribed(channels, subList) {
     if (channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0) {
         return false;
     }
@@ -136,7 +136,9 @@ function allChannelSubscribed(channels, subList) {
     const subListUrl = subList.map((item) => item.subUrl);
     channels.forEach((channel) => {
         const isContains = subListUrl.indexOf(channel.url);
-        if (isContains < 0) {
+        const channelMatchUrl = channel.url.endsWith('/') ? channel.url.substring(0, str.length - 1) : channel.url + '/';
+        const isContainsMatch = subListUrl.indexOf(channelMatchUrl);
+        if (isContains < 0 && isContainsMatch < 0) {
             allSubcribe = false;
             return allSubcribe;
         }
