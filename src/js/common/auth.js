@@ -1,6 +1,7 @@
 import { defaultConfig } from '../common/config';
+import { subChannel } from '../common/cruise';
 
-export function handleAccessTokenExpire(deviceId){
+export function handleAccessTokenExpire(deviceId,e,retryTimes){
     chrome.storage.local.get('refreshToken',(result) => {
         var refreshToken = result.refreshToken;
         const urlParams = {
@@ -8,11 +9,11 @@ export function handleAccessTokenExpire(deviceId){
             app: 1,
             refreshToken: refreshToken,
         };
-        refreshAccessToken(urlParams);
+        refreshAccessToken(urlParams,e,retryTimes);
     });
 }
 
-export function refreshAccessToken(urlParams){
+export function refreshAccessToken(urlParams,e,retryTimes){
     const apiUrl = defaultConfig.cruiseApi;
     const baseUrl = apiUrl + '/post/auth/access_token/refresh';
     fetch(baseUrl,{
@@ -27,12 +28,16 @@ export function refreshAccessToken(urlParams){
         console.log(res);
         if (res && res.resultCode === '00100100004017') {
             // refresh token expired
-            handleRefreshTokenExpire(urlParams.deviceId);
+            handleRefreshTokenExpire(urlParams.deviceId,e,retryTimes);
         } 
+        if(res && res.resultCode === '200'){
+            retryTimes = retryTimes + 1;
+            subChannel(e,retryTimes);
+        }
     });
 }
 
-export function handleRefreshTokenExpire(deviceId){
+export function handleRefreshTokenExpire(deviceId,e,retryTimes){
     chrome.storage.local.get('username',(resp) => {
         const userName = resp.username;
         if (userName === null || userName === '' || userName === undefined) {
@@ -51,12 +56,12 @@ export function handleRefreshTokenExpire(deviceId){
                 deviceId: deviceId,
                 password: password,
             };
-            refreshRefreshToken(urlParams);
+            refreshRefreshToken(urlParams,e,retryTimes);
         });
     });
 }
 
-export function refreshRefreshToken(urlParams){
+export function refreshRefreshToken(urlParams,e,retryTimes){
     const apiUrl = defaultConfig.cruiseApi;
     const baseUrl = apiUrl + '/post/auth/refresh_token/refresh';
     fetch(baseUrl,{
@@ -68,17 +73,20 @@ export function refreshRefreshToken(urlParams){
     })
     .then((res) => res.json())
     .then((res) => {
-        const accessToken = res.result.accessToken;
-        const refreshToken = res.result.refreshToken;
-        chrome.storage.local.set(
-            {
-                accessToken: accessToken,
-                refreshToken: refreshToken
-            },
-            function () {
-                
-            }
-        ); 
+        if(res && res.resultCode === '200'){
+            const accessToken = res.result.accessToken;
+            const refreshToken = res.result.refreshToken;
+            chrome.storage.local.set(
+                {
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                },
+                function () {
+                    retryTimes = retryTimes + 1;
+                    subChannel(e,retryTimes);
+                }
+            ); 
+        }
     });
 }
 

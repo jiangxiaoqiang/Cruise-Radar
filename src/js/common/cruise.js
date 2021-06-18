@@ -88,7 +88,7 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId) {
         .then((res) => res.json())
         .then((res) => {
             if (res && res.resultCode === '00100100004016' ) {
-                handleAccessTokenExpire(deviceId);
+                handleAccessTokenExpire(deviceId,e,retryTimes);
             } else if(res && res.resultCode === '00100100004014'){
                 chrome.storage.local.remove(['accessToken'],function(){
 
