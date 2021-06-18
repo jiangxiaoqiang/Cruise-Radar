@@ -1,6 +1,7 @@
 import { Message } from 'element-ui';
 import { defaultConfig } from '../common/config';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import {handleAccessTokenExpire} from '../common/auth';
 
 export function getDeviceFingerPrint(userName, password, e, retryTimes) {
     // Initialize an agent at application startup.
@@ -36,16 +37,18 @@ export function fetchAuthTokenEnhance(username, password, e, retryTimes, deviceI
     })
         .then((response) => response.json())
         .then((res) => {
-            if (res && res.result && res.result.token) {
-                const authToken = res.result.token;
-                console.log('获取token：' + authToken);
+            if (res && res.result && res.result.accessToken) {
+                const accessToken = res.result.accessToken;
+                const refreshToken = res.result.refreshToken;
+                console.log('获取token：' + accessToken);
                 chrome.storage.local.set(
                     {
-                        cruiseToken: authToken,
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
                     },
                     function () {
                         retryTimes++;
-                        subChannel(e, retryTimes);
+                        subChannel(e, retryTimes,deviceId);
                     }
                 );
             }
@@ -73,19 +76,23 @@ export function getUserInfoEnhance(e, retryTimes) {
     });
 }
 
-export function handleSub(urlParams, baseUrl, result, e, retryTimes) {
+export function handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId) {
     fetch(baseUrl, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
-            token: result.cruiseToken,
+            accessToken: result.accessToken,
         },
         body: JSON.stringify(urlParams),
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res && (res.statusCode === '904' || res.statusCode === '907')) {
-                getUserInfoEnhance(e, retryTimes);
+            if (res && res.resultCode === '00100100004016' ) {
+                handleAccessTokenExpire(deviceId);
+            } else if(res && res.resultCode === '00100100004014'){
+                chrome.storage.local.remove(['accessToken'],function(){
+
+                });
             } else if (res && res.result && res.statusCode === '200') {
                 // 更新缓存订阅列表
                 const subList = res.result;
@@ -98,7 +105,7 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes) {
                         Message('订阅成功');
                     }
                 );
-            } else {
+            } else{
                 e.setAttribute('value', '订阅');
                 Message('订阅失败，' + res.msg);
             }
@@ -108,7 +115,10 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes) {
         });
 }
 
-export function composeRequest(e, result, retryTimes) {
+
+
+
+export function composeRequest(e, result, retryTimes,deviceId) {
     const rssUrl = e.getAttribute('url');
     const iconUrl = e.getAttribute('icon');
     const apiUrl = defaultConfig.cruiseApi;
@@ -117,20 +127,20 @@ export function composeRequest(e, result, retryTimes) {
         subUrl: rssUrl,
         favIconUrl: iconUrl,
     };
-    handleSub(urlParams, baseUrl, result, e, retryTimes);
+    handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId);
 }
 
-export function subChannel(e, retryTimes) {
+export function subChannel(e, retryTimes,deviceId) {
     if (retryTimes > 3) {
-        Message('无法获取用户授权信息，订阅失败');
+        Message('无法获取授权信息，订阅失败');
         e.setAttribute('value', '订阅');
         return;
     }
-
-    chrome.storage.local.get('cruiseToken', (result) => {
-        if (result.cruiseToken == null) {
-            result.cruiseToken = getUserInfoEnhance(e, retryTimes);
+    chrome.storage.local.get('accessToken', (result) => {
+        if (result.accessToken == null) {
+            getUserInfoEnhance(e, retryTimes);
+        }else{
+            composeRequest(e, result, retryTimes,deviceId);
         }
-        composeRequest(e, result, retryTimes);
     });
 }

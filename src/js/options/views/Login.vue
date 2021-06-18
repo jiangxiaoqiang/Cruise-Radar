@@ -3,14 +3,14 @@
         <div class="title">登录</div>
         <div class="setting-name">用户名：</div>
         <div class="setting-input">
-            <el-input @change="saveConfig()" @input.native="change($event)" placeholder="请输入你的用户名"></el-input>
+            <el-input @change="saveConfig()" @input.native="change($event)" placeholder="请输入你的用户名" v-model="username"></el-input>
         </div>
         <div class="setting-name">密码：</div>
         <div class="setting-input">
-            <el-input @change="saveConfig" placeholder="请输入你的密码"></el-input>
+            <el-input @change="saveConfig" placeholder="请输入你的密码" @input.native="change($event)" v-model="password"></el-input>
         </div>
         <div class="setting-input">
-            <el-button size="medium" @click="addRssSubscribe">登录</el-button>
+            <el-button size="medium" @click="login">登录</el-button>
         </div>
     </div>
 </template>
@@ -34,27 +34,20 @@ export default {
     }),
     methods: {
         change() {
-            alert("请输入你的用户名1");
             this.$forceUpdate();
         },
         saveConfig() {
-            alert("请输入你的用户名");
-            console.log("请输入你的用户名");
-            alert("ddd");
             chrome.storage.local.set({
-                username: "+8615683761628",
-                password: "12345678"
+                username: this.username,
+                password: this.password
             },function(resp){
                 
             });
         },
-        addRssSubscribe(url){
-            alert("ddd");
-            console.log("登录2");
-            
+        login(url){
             chrome.storage.local.set({
-                username: "+8615683761628",
-                password: "12345678"
+                username: this.username,
+                password: this.password
             },function(resp){
                 
             });
