@@ -27,7 +27,7 @@ export function refreshAccessToken(urlParams){
         console.log(res);
         if (res && res.resultCode === '00100100004017') {
             // refresh token expired
-            handleRefreshTokenExpire(deviceId);
+            handleRefreshTokenExpire(urlParams.deviceId);
         } 
     });
 }
@@ -68,10 +68,17 @@ export function refreshRefreshToken(urlParams){
     })
     .then((res) => res.json())
     .then((res) => {
-        console.log(res);
-        if (res && (res.statusCode === '904' || res.statusCode === '907')) {
-            //getUserInfoEnhance(e, retryTimes);
-        } 
+        const accessToken = res.result.accessToken;
+        const refreshToken = res.result.refreshToken;
+        chrome.storage.local.set(
+            {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            },
+            function () {
+                
+            }
+        ); 
     });
 }
 

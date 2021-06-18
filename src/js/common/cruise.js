@@ -130,7 +130,22 @@ export function composeRequest(e, result, retryTimes,deviceId) {
     handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId);
 }
 
-export function subChannel(e, retryTimes,deviceId) {
+export function subChannel(e, retryTimes) {
+    // Initialize an agent at application startup.
+    const fpPromise = FingerprintJS.load();
+
+    // Get the visitor identifier when you need it.
+    fpPromise
+        .then((fp) => fp.get())
+        .then((result) => {
+            // This is the visitor identifier:
+            const visitorId = result.visitorId;
+            subChannelImpl(retryTimes,e,visitorId);
+        });
+}
+
+
+export function subChannelImpl(retryTimes,e,deviceId){
     if (retryTimes > 3) {
         Message('无法获取授权信息，订阅失败');
         e.setAttribute('value', '订阅');
