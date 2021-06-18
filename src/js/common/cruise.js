@@ -1,7 +1,7 @@
 import { Message } from 'element-ui';
 import { defaultConfig } from '../common/config';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import {handleAccessTokenExpire} from '../common/auth';
+import { handleAccessTokenExpire } from '../common/auth';
 
 export function getDeviceFingerPrint(userName, password, e, retryTimes) {
     // Initialize an agent at application startup.
@@ -44,11 +44,11 @@ export function fetchAuthTokenEnhance(username, password, e, retryTimes, deviceI
                 chrome.storage.local.set(
                     {
                         accessToken: accessToken,
-                        refreshToken: refreshToken
+                        refreshToken: refreshToken,
                     },
                     function () {
                         retryTimes++;
-                        subChannel(e, retryTimes,deviceId);
+                        subChannel(e, retryTimes, deviceId);
                     }
                 );
             }
@@ -76,7 +76,7 @@ export function getUserInfoEnhance(e, retryTimes) {
     });
 }
 
-export function handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId) {
+export function handleSub(urlParams, baseUrl, result, e, retryTimes, deviceId) {
     fetch(baseUrl, {
         method: 'POST',
         headers: {
@@ -87,12 +87,10 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId) {
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res && res.resultCode === '00100100004016' ) {
-                handleAccessTokenExpire(deviceId,e,retryTimes);
-            } else if(res && res.resultCode === '00100100004014'){
-                chrome.storage.local.remove(['accessToken'],function(){
-
-                });
+            if (res && res.resultCode === '00100100004016') {
+                handleAccessTokenExpire(deviceId, e, retryTimes);
+            } else if (res && res.resultCode === '00100100004014') {
+                chrome.storage.local.remove(['accessToken'], function () {});
             } else if (res && res.result && res.statusCode === '200') {
                 // 更新缓存订阅列表
                 const subList = res.result;
@@ -105,7 +103,7 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId) {
                         Message('订阅成功');
                     }
                 );
-            } else{
+            } else {
                 e.setAttribute('value', '订阅');
                 Message('订阅失败，' + res.msg);
             }
@@ -115,10 +113,7 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId) {
         });
 }
 
-
-
-
-export function composeRequest(e, result, retryTimes,deviceId) {
+export function composeRequest(e, result, retryTimes, deviceId) {
     const rssUrl = e.getAttribute('url');
     const iconUrl = e.getAttribute('icon');
     const apiUrl = defaultConfig.cruiseApi;
@@ -127,7 +122,7 @@ export function composeRequest(e, result, retryTimes,deviceId) {
         subUrl: rssUrl,
         favIconUrl: iconUrl,
     };
-    handleSub(urlParams, baseUrl, result, e, retryTimes,deviceId);
+    handleSub(urlParams, baseUrl, result, e, retryTimes, deviceId);
 }
 
 export function subChannel(e, retryTimes) {
@@ -140,12 +135,11 @@ export function subChannel(e, retryTimes) {
         .then((result) => {
             // This is the visitor identifier:
             const visitorId = result.visitorId;
-            subChannelImpl(retryTimes,e,visitorId);
+            subChannelImpl(retryTimes, e, visitorId);
         });
 }
 
-
-export function subChannelImpl(retryTimes,e,deviceId){
+export function subChannelImpl(retryTimes, e, deviceId) {
     if (retryTimes > 3) {
         Message('无法获取授权信息，订阅失败');
         e.setAttribute('value', '订阅');
@@ -154,8 +148,8 @@ export function subChannelImpl(retryTimes,e,deviceId){
     chrome.storage.local.get('accessToken', (result) => {
         if (result.accessToken == null) {
             getUserInfoEnhance(e, retryTimes);
-        }else{
-            composeRequest(e, result, retryTimes,deviceId);
+        } else {
+            composeRequest(e, result, retryTimes, deviceId);
         }
     });
 }

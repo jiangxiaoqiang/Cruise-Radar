@@ -80,7 +80,7 @@ function setBadge(tabId) {
             return;
         }
         const channels = window.pageRSS[tabId];
-        if(havingChannelUnsubscribed(channels,subList)){
+        if (havingChannelUnsubscribed(channels, subList)) {
             setBadgeTextImpl(tabId, '#E1E100');
             return;
         }
@@ -101,7 +101,7 @@ function setBadge(tabId) {
  * @param {*} subList
  * @returns
  */
- function havingChannelUnsubscribed(channels, subList) {
+function havingChannelUnsubscribed(channels, subList) {
     if (channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0) {
         return false;
     }
@@ -110,8 +110,8 @@ function setBadge(tabId) {
     channels.forEach((channel) => {
         const isContains = subListUrl.indexOf(channel.url);
         if (isContains > 0) {
-            var subListItem = subList.find(item=>item.subUrl === channel.url);
-            if(subListItem.userSubStatus === -1){
+            const subListItem = subList.find((item) => item.subUrl === channel.url);
+            if (subListItem.userSubStatus === -1) {
                 havingUnsubcribe = true;
                 return;
             }
@@ -128,7 +128,7 @@ function setBadge(tabId) {
  * @param {*} subList
  * @returns
  */
- function allChannelSubscribed(channels, subList) {
+function allChannelSubscribed(channels, subList) {
     if (channels === undefined || channels.length === 0 || subList === undefined || subList.length === 0) {
         return false;
     }
