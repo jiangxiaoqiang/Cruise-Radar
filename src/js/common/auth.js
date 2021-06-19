@@ -31,8 +31,16 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
                 handleRefreshTokenExpire(urlParams.deviceId, e, retryTimes);
             }
             if (res && res.resultCode === '200') {
-                retryTimes = retryTimes + 1;
-                subChannel(e, retryTimes);
+                const accessToken = res.result.accessToken;
+                chrome.storage.local.set(
+                    {
+                        accessToken: accessToken,
+                    },
+                    function () {
+                        retryTimes = retryTimes + 1;
+                        subChannel(e, retryTimes);
+                    }
+                );
             }
         });
 }
