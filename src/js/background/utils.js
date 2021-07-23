@@ -141,9 +141,17 @@ function allChannelSubscribed(channels, subList) {
     const subListUrl = subList.map((item) => item.subUrl);
     channels.forEach((channel) => {
         const isContains = subListUrl.indexOf(channel.url);
+        // 订阅源链接末尾带斜杠和不带斜杠皆认为是一样的订阅连接
         const channelMatchUrl = channel.url.endsWith('/') ? channel.url.substring(0, channel.url.length - 1) : channel.url + '/';
         const isContainsMatch = subListUrl.indexOf(channelMatchUrl);
-        if (isContains < 0 && isContainsMatch < 0) {
+        // 当前识别协议类型为http，已经订阅类型为https皆认为是一样的链接
+        // 当前识别的协议为https，已经订阅类型为http是不一样的链接，用https替换http
+        // https://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
+        var parser = document.createElement('a');
+        parser.href = channel.url;
+        const channelSecUrl = parser.protocol === "http:" ? channel.url.replace('http://','https://') : channel.url;
+        var isSecContain = subListUrl.indexOf(channelSecUrl);
+        if (isContains < 0 && isContainsMatch < 0 && isSecContain < 0) {
             allSubcribe = false;
             return allSubcribe;
         }
