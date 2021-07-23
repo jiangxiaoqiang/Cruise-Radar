@@ -1,8 +1,6 @@
-# Cruise-Radar
+# 简介
 
-Google Chrome浏览器插件Cruise-Radar和Cruise结合使用。帮助你发现页面上的RSS订阅链接。
-
-
+Cruise-Radar可以帮助你发现页面上的RSS订阅链接，可以订阅RSS，在Cruise中阅读。Google Chrome浏览器插件Cruise-Radar和Cruise结合使用。
 
 ## 安装Cruise-Radar
 
@@ -19,5 +17,7 @@ yarn build
 
 从Google Chrome浏览器中加载目标文件夹dist(在当前电脑路径为`/Users/dolphin/source/Cruise-Radar/dist`)即可。
 
+### Google Chrome应用商店安装
 
+暂时还未上架。
 
