@@ -141,7 +141,7 @@ function allChannelSubscribed(channels, subList) {
     const subListUrl = subList.map((item) => item.subUrl);
     channels.forEach((channel) => {
         const isContains = subListUrl.indexOf(channel.url);
-        const channelMatchUrl = channel.url.endsWith('/') ? channel.url.substring(0, str.length - 1) : channel.url + '/';
+        const channelMatchUrl = channel.url.endsWith('/') ? channel.url.substring(0, channel.url.length - 1) : channel.url + '/';
         const isContainsMatch = subListUrl.indexOf(channelMatchUrl);
         if (isContains < 0 && isContainsMatch < 0) {
             allSubcribe = false;
