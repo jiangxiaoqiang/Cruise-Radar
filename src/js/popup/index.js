@@ -35,14 +35,23 @@ function generateList(type, list) {
                 let isSub = false;
                 const subList = result.cruiseSubList;
                 subList.forEach((item) => {
-                    if (item.subUrl == url) {
+                    // 结尾带斜线的情况
+                    const matchUrl = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
+                    if (item.subUrl == matchUrl) {
+                        isSub = true;
+                    }
+                    // 解析的地址为http，实际已经订阅了https的情况
+                    var parser = document.createElement('a');
+                    parser.href = matchUrl;
+                    const channelSecUrl = parser.protocol === "http:" ? matchUrl.replace('http://','https://') : matchUrl;
+                    if(item.subUrl == channelSecUrl){
                         isSub = true;
                     }
                 });
                 if (isSub) {
-                    document.querySelectorAll('input').forEach((ele) => {
-                        if (ele.id == url) {
-                            ele.setAttribute('value', '已订阅');
+                    document.querySelectorAll('input').forEach((element) => {
+                        if (element.id == url) {
+                            element.setAttribute('value', '已订阅');
                         }
                     });
                 }
