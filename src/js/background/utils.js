@@ -124,6 +124,11 @@ function havingChannelUnsubscribed(channels, subList) {
  * 是否订阅过所有频道
  * 决定提示气泡显示颜色
  * 如果已经订阅，用户则可直接忽略，节省时间
+ * 
+ * 有的rss源链接结尾会有斜线，类似：https://www.si.com/.rss/full/
+ * 为了避免特殊逻辑处理，所以规定以不带斜线的为标准
+ * 数据存储，验证都以链接结尾不带斜线为标准格式
+ * 
  * @param {*} channels
  * @param {*} subList
  * @returns
