@@ -219,26 +219,21 @@ export function handleRSS(feeds, tabId, useCache) {
         setBadge(tabId);
     } else {
         chrome.tabs.get(tabId, (tab) => {
-            feeds &&
-                feeds.forEach((feed) => {
+            feeds && feeds.forEach((feed) => {
                     feed.image = tab.favIconUrl || feed.image;
                 });
             window.pageRSS[tabId] = (feeds && feeds.filter((feed) => !feed.uncertain)) || [];
-
             getWebsiteRSSHub(tab.url, (feeds) => {
                 window.websiteRSSHub[tabId] = feeds || [];
                 setBadge(tabId);
             });
-
             getPageRSSHub(tab.url, tabId, (feeds) => {
                 window.pageRSSHub[tabId] = feeds || [];
                 setBadge(tabId);
             });
         });
 
-        feeds &&
-            feeds
-                .filter((feed) => feed.uncertain)
+        feeds && feeds.filter((feed) => feed.uncertain)
                 .forEach((feed) => {
                     rssParser.parseURL(feed.url, (err, result) => {
                         if (!err) {

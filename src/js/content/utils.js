@@ -54,16 +54,22 @@ export function getPageRSS() {
         for (let i = 0; i < links.length; i++) {
             if (links[i].hasAttribute('type') && types.indexOf(links[i].getAttribute('type')) !== -1) {
                 const feed_url = links[i].getAttribute('href');
-
                 if (feed_url) {
-                    const feed = {
-                        url: handleUrl(feed_url),
-                        title: links[i].getAttribute('title') || defaultTitle,
-                        image,
-                    };
-                    if (!unique.check(feed.url)) {
-                        pageRSS.push(feed);
-                        unique.save(feed.url);
+                    /**
+                     * 针对RSS订阅源的评论feed默认不提供自动发现
+                     * 评论feed需要单独的逻辑来加载到对应的文章底部
+                     */
+                    const isContains = feed_url.toLowerCase().indexOf("/comments");
+                    if(isContains === -1){
+                        const feed = {
+                            url: handleUrl(feed_url),
+                            title: links[i].getAttribute('title') || defaultTitle,
+                            image,
+                        };
+                        if (!unique.check(feed.url)) {
+                            pageRSS.push(feed);
+                            unique.save(feed.url);
+                        }
                     }
                 }
             }
