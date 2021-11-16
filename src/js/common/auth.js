@@ -45,16 +45,29 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
         });
 }
 
+// https://stackoverflow.com/questions/69983708/how-to-make-the-javascript-null-check-more-clear
+export function isNull(value) {
+    // any falsy value: https://developer.mozilla.org/en-US/docs/Glossary/Falsy
+    if (!value) return true;
+    if (typeof value === 'object') {
+        // empty array
+        if (Array.isArray(value) && value.length === 0) return true;
+        // empty object
+        if (value.toString() === '[object Object]' && JSON.stringify(value) === '{}') return true;
+    }
+    return false;
+}
+
 export function handleRefreshTokenExpire(deviceId, e, retryTimes) {
     chrome.storage.local.get('username', (resp) => {
         const userName = resp.username;
-        if (userName === null || userName === '' || userName === undefined) {
+        if (isNull(userName)) {
             Message('请配置用户名');
             return;
         }
         chrome.storage.local.get('password', (pwdResp) => {
             const password = pwdResp.password;
-            if (password === null || password === '' || password === undefined) {
+            if (isNull(password)) {
                 Message('请配置密码');
                 return;
             }
