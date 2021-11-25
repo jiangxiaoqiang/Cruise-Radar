@@ -81,7 +81,7 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes, deviceId) {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
-            accessToken: result.accessToken,
+            'x-access-token': result.accessToken,
         },
         body: JSON.stringify(urlParams),
     })
