@@ -2,6 +2,7 @@ import { Message } from 'element-ui';
 import { defaultConfig } from '../common/config';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { handleAccessTokenExpire } from '../common/auth';
+import { LoginType } from './enumn/loginType';
 
 export function getDeviceFingerPrint(userName, password, e, retryTimes) {
     // Initialize an agent at application startup.
@@ -27,6 +28,7 @@ export function fetchAuthTokenEnhance(username, password, e, retryTimes, deviceI
         deviceId: deviceId,
         app: 1,
         deviceType: 7,
+        loginType: LoginType.PHONE,
     };
     fetch(baseUrl, {
         method: 'POST',
