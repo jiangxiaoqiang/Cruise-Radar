@@ -41,10 +41,10 @@ function generateList(type, list) {
                         isSub = true;
                     }
                     // 解析的地址为http，实际已经订阅了https的情况
-                    var parser = document.createElement('a');
+                    const parser = document.createElement('a');
                     parser.href = matchUrl;
-                    const channelSecUrl = parser.protocol === "http:" ? matchUrl.replace('http://','https://') : matchUrl;
-                    if(item.subUrl == channelSecUrl){
+                    const channelSecUrl = parser.protocol === 'http:' ? matchUrl.replace('http://', 'https://') : matchUrl;
+                    if (item.subUrl == channelSecUrl) {
                         isSub = true;
                     }
                 });

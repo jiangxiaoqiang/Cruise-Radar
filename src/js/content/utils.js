@@ -59,8 +59,8 @@ export function getPageRSS() {
                      * 针对RSS订阅源的评论feed默认不提供自动发现
                      * 评论feed需要单独的逻辑来加载到对应的文章底部
                      */
-                    const isContains = feed_url.toLowerCase().indexOf("/comments");
-                    if(isContains === -1){
+                    const isContains = feed_url.toLowerCase().indexOf('/comments');
+                    if (isContains === -1) {
                         const feed = {
                             url: handleUrl(feed_url),
                             title: links[i].getAttribute('title') || defaultTitle,
