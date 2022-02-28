@@ -3,6 +3,8 @@ import { subChannel } from '../common/cruise';
 import { RequestHandler } from 'js-wheel/dist/src/net/rest/RequestHandler';
 import { ResponseCode } from 'js-wheel/dist/src/net/rest/ResponseCode';
 import LocalStorage from 'js-wheel/dist/src/utils/data/LocalStorage';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 export function handleAccessTokenExpire(deviceId, e, retryTimes) {
     chrome.storage.local.get('refreshToken', (result) => {
@@ -103,6 +105,7 @@ export async function refreshRefreshToken(urlParams, e, retryTimes) {
     })
         .then((res) => res.json())
         .then((res) => {
+            // https://stackoverflow.com/questions/33527653/babel-6-regeneratorruntime-is-not-defined
             if ((res && res.resultCode === ResponseCode.REFRESH_TOKEN_EXPIRED) || (res && res.resultCode === ResponseCode.REFRESH_TOKEN_INVALID)) {
                 const configBase = {
                     appId: 1,
