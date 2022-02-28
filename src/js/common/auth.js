@@ -1,5 +1,8 @@
 import { defaultConfig } from '../common/config';
 import { subChannel } from '../common/cruise';
+import { RequestHandler } from 'js-wheel/dist/src/net/rest/RequestHandler';
+import { ResponseCode } from 'js-wheel/dist/src/net/rest/ResponseCode';
+import LocalStorage from 'js-wheel/dist/src/utils/data/LocalStorage';
 
 export function handleAccessTokenExpire(deviceId, e, retryTimes) {
     chrome.storage.local.get('refreshToken', (result) => {
@@ -88,7 +91,7 @@ export function handleRefreshTokenExpire(deviceId, e, retryTimes) {
     });
 }
 
-export function refreshRefreshToken(urlParams, e, retryTimes) {
+export async function refreshRefreshToken(urlParams, e, retryTimes) {
     const apiUrl = defaultConfig.cruiseApi;
     const baseUrl = apiUrl + '/post/auth/refresh_token/refresh';
     fetch(baseUrl, {
@@ -100,6 +103,22 @@ export function refreshRefreshToken(urlParams, e, retryTimes) {
     })
         .then((res) => res.json())
         .then((res) => {
+            if ((res && res.resultCode === ResponseCode.REFRESH_TOKEN_EXPIRED) || (res && res.resultCode === ResponseCode.REFRESH_TOKEN_INVALID)) {
+                const configBase = {
+                    appId: 1,
+                    baseAuthUrl: 'https://api.poemhub.top',
+                    userLoginUrlPath: '/post/user/plugin/login',
+                    accessTokenUrlPath: '/post/auth/refresh_token/refresh',
+                    refreshTokenUrlPath: '/post/auth/access_token/refresh',
+                };
+                console.log(configBase);
+                ConfigHandler.stupidInit(configBase);
+                LocalStorage.setLocalStorage('username', urlParams.phone);
+                LocalStorage.setLocalStorage('password', urlParams.password);
+                RequestHandler.handleRefreshTokenInvalid();
+                retryTimes = retryTimes + 1;
+                subChannel(e, retryTimes);
+            }
             if (res && res.resultCode === '200') {
                 const accessToken = res.result.accessToken;
                 const refreshToken = res.result.refreshToken;
