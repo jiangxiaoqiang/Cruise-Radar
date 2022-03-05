@@ -1,4 +1,4 @@
-import { Message } from 'element-ui';
+// import { Message } from 'element-ui';
 import { defaultConfig } from '../common/config';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { handleAccessTokenExpire } from '../common/auth';

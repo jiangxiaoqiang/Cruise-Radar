@@ -1,5 +1,6 @@
 import '../../css/options.scss';
 import Vue from 'vue';
+import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import About from './views/About.vue';
@@ -22,10 +23,18 @@ Vue.use(CollapseItem);
 Vue.use(Button);
 Vue.use(Progress);
 Vue.use(Tooltip);
+Vue.use(VueI18n);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
 Vue.config.productionTip = false;
+
+const i18n = new VueI18n({
+    locale: localStorage.getItem('lang') || 'zh',
+    messages: messages,
+});
+
+locale.i18n((key, value) => i18n.t(key, value));
 
 const routes = [
     { path: '/', redirect: '/about' },
@@ -39,4 +48,5 @@ const router = new VueRouter({
 new Vue({
     render: (h) => h(App),
     router,
+    i18n,
 }).$mount('#app');
