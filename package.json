@@ -78,6 +78,7 @@
     "route-recognizer": "0.3.4",
     "rss-parser": "3.9.0",
     "sass": "^1.44.0",
+    "vue-i18n": "^8.27.0",
     "vue-router": "3.4.9",
     "yarn": "^1.22.17"
   }
