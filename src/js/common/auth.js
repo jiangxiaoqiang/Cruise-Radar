@@ -12,7 +12,7 @@ export function handleAccessTokenExpire(deviceId, e, retryTimes) {
         const urlParams = {
             deviceId: deviceId,
             app: 1,
-            refreshToken: refreshToken,
+            refresh_token: refreshToken,
         };
         refreshAccessToken(urlParams, e, retryTimes);
     });
