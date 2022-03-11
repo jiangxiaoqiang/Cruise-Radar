@@ -5261,8 +5261,8 @@
   "resolved" "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.2.tgz"
   "version" "3.0.2"
 
-"js-wheel@jiangxiaoqiang/js-wheel":
-  "resolved" "git+ssh://git@github.com/jiangxiaoqiang/js-wheel.git#c1ddcbc435910c4e9b396ad05480778c967e593d"
+"js-wheel@https://github.com/jiangxiaoqiang/js-wheel.git":
+  "resolved" "git+ssh://git@github.com/jiangxiaoqiang/js-wheel.git#13e03ac6a369e0ea8bf55da91f9f0aac16a988d7"
   "version" "1.0.0"
   dependencies:
     "@babel/cli" "^7.17.6"

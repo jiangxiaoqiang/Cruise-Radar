@@ -3,6 +3,7 @@ import { defaultConfig } from '../common/config';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { handleAccessTokenExpire } from '../common/auth';
 import { LoginType } from './enumn/loginType';
+import LocalStorage from 'js-wheel/dist/src/utils/data/LocalStorage';
 
 export function getDeviceFingerPrint(userName, password, e, retryTimes) {
     // Initialize an agent at application startup.
@@ -45,8 +46,8 @@ export function fetchAuthTokenEnhance(username, password, e, retryTimes, deviceI
                 console.log('获取token：' + accessToken);
                 chrome.storage.local.set(
                     {
-                        accessToken: accessToken,
-                        refreshToken: refreshToken,
+                        ["x-access-token"]: accessToken,
+                        ["x-refresh-token"]: refreshToken,
                     },
                     function () {
                         retryTimes++;
@@ -78,12 +79,12 @@ export function getUserInfoEnhance(e, retryTimes) {
     });
 }
 
-export function handleSub(urlParams, baseUrl, result, e, retryTimes, deviceId) {
+export function handleSub(urlParams, baseUrl, accessToken, e, retryTimes, deviceId) {
     fetch(baseUrl, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
-            'x-access-token': result.accessToken,
+            'x-access-token': accessToken,
         },
         body: JSON.stringify(urlParams),
     })
@@ -115,7 +116,7 @@ export function handleSub(urlParams, baseUrl, result, e, retryTimes, deviceId) {
         });
 }
 
-export function composeRequest(e, result, retryTimes, deviceId) {
+export function composeRequest(e, accessToken, retryTimes, deviceId) {
     const rssUrl = e.getAttribute('url');
     const iconUrl = e.getAttribute('icon');
     const apiUrl = defaultConfig.cruiseApi;
@@ -124,7 +125,7 @@ export function composeRequest(e, result, retryTimes, deviceId) {
         subUrl: rssUrl,
         favIconUrl: iconUrl,
     };
-    handleSub(urlParams, baseUrl, result, e, retryTimes, deviceId);
+    handleSub(urlParams, baseUrl, accessToken, e, retryTimes, deviceId);
 }
 
 export function subChannel(e, retryTimes) {
@@ -141,17 +142,16 @@ export function subChannel(e, retryTimes) {
         });
 }
 
-export function subChannelImpl(retryTimes, e, deviceId) {
+export async function subChannelImpl(retryTimes, e, deviceId) {
     if (retryTimes > 3) {
-        Message('无法获取授权信息，订阅失败');
+        // Message('无法获取授权信息，订阅失败');
         e.setAttribute('value', '订阅');
         return;
     }
-    chrome.storage.local.get('accessToken', (result) => {
-        if (result.accessToken == null) {
-            getUserInfoEnhance(e, retryTimes);
-        } else {
-            composeRequest(e, result, retryTimes, deviceId);
-        }
-    });
+    let accessToken = await LocalStorage.readLocalStorage("x-access-token");
+    if (accessToken == null) {
+        getUserInfoEnhance(e, retryTimes);
+    } else {
+        composeRequest(e, accessToken, retryTimes, deviceId);
+    }
 }
