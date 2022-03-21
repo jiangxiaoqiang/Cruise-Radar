@@ -5,9 +5,8 @@ export function handleAccessTokenExpire(deviceId, e, retryTimes) {
     chrome.storage.local.get('refreshToken', (result) => {
         const refreshToken = result.refreshToken;
         const urlParams = {
-            deviceId: deviceId,
-            app: 1,
-            refreshToken: refreshToken,
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
         };
         refreshAccessToken(urlParams, e, retryTimes);
     });
@@ -25,11 +24,6 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
     })
         .then((res) => res.json())
         .then((res) => {
-            console.log(res);
-            if (res && res.resultCode === '00100100004017') {
-                // refresh token expired
-                handleRefreshTokenExpire(urlParams.deviceId, e, retryTimes);
-            }
             if (res && res.resultCode === '200') {
                 const accessToken = res.result.accessToken;
                 chrome.storage.local.set(
