@@ -124,11 +124,11 @@ function havingChannelUnsubscribed(channels, subList) {
  * 是否订阅过所有频道
  * 决定提示气泡显示颜色
  * 如果已经订阅，用户则可直接忽略，节省时间
- * 
+ *
  * 有的rss源链接结尾会有斜线，类似：https://www.si.com/.rss/full/
  * 为了避免特殊逻辑处理，所以规定以不带斜线的为标准
  * 数据存储，验证都以链接结尾不带斜线为标准格式
- * 
+ *
  * @param {*} channels
  * @param {*} subList
  * @returns
@@ -147,10 +147,10 @@ function allChannelSubscribed(channels, subList) {
         // 当前识别协议类型为http，已经订阅类型为https皆认为是一样的链接
         // 当前识别的协议为https，已经订阅类型为http是不一样的链接，用https替换http
         // https://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
-        var parser = document.createElement('a');
+        const parser = document.createElement('a');
         parser.href = channel.url;
-        const channelSecUrl = parser.protocol === "http:" ? channel.url.replace('http://','https://') : channel.url;
-        var isSecContain = subListUrl.indexOf(channelSecUrl);
+        const channelSecUrl = parser.protocol === 'http:' ? channel.url.replace('http://', 'https://') : channel.url;
+        const isSecContain = subListUrl.indexOf(channelSecUrl);
         if (isContains < 0 && isContainsMatch < 0 && isSecContain < 0) {
             allSubcribe = false;
             return allSubcribe;
@@ -219,7 +219,8 @@ export function handleRSS(feeds, tabId, useCache) {
         setBadge(tabId);
     } else {
         chrome.tabs.get(tabId, (tab) => {
-            feeds && feeds.forEach((feed) => {
+            feeds &&
+                feeds.forEach((feed) => {
                     feed.image = tab.favIconUrl || feed.image;
                 });
             window.pageRSS[tabId] = (feeds && feeds.filter((feed) => !feed.uncertain)) || [];
@@ -233,7 +234,9 @@ export function handleRSS(feeds, tabId, useCache) {
             });
         });
 
-        feeds && feeds.filter((feed) => feed.uncertain)
+        feeds &&
+            feeds
+                .filter((feed) => feed.uncertain)
                 .forEach((feed) => {
                     rssParser.parseURL(feed.url, (err, result) => {
                         if (!err) {

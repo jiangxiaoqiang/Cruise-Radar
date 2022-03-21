@@ -48,12 +48,18 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
 // https://stackoverflow.com/questions/69983708/how-to-make-the-javascript-null-check-more-clear
 export function isNull(value) {
     // any falsy value: https://developer.mozilla.org/en-US/docs/Glossary/Falsy
-    if (!value) return true;
+    if (!value) {
+        return true;
+    }
     if (typeof value === 'object') {
         // empty array
-        if (Array.isArray(value) && value.length === 0) return true;
+        if (Array.isArray(value) && value.length === 0) {
+            return true;
+        }
         // empty object
-        if (value.toString() === '[object Object]' && JSON.stringify(value) === '{}') return true;
+        if (value.toString() === '[object Object]' && JSON.stringify(value) === '{}') {
+            return true;
+        }
     }
     return false;
 }
