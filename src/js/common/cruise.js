@@ -46,8 +46,8 @@ export function fetchAuthTokenEnhance(username, password, e, retryTimes, deviceI
                 console.log('获取token：' + accessToken);
                 chrome.storage.local.set(
                     {
-                        ["x-access-token"]: accessToken,
-                        ["x-refresh-token"]: refreshToken,
+                        'x-access-token': accessToken,
+                        'x-refresh-token': refreshToken,
                     },
                     function () {
                         retryTimes++;
@@ -148,7 +148,7 @@ export async function subChannelImpl(retryTimes, e, deviceId) {
         e.setAttribute('value', '订阅');
         return;
     }
-    let accessToken = await LocalStorage.readLocalStorage("x-access-token");
+    const accessToken = await LocalStorage.readLocalStorage('x-access-token');
     if (accessToken == null) {
         getUserInfoEnhance(e, retryTimes);
     } else {

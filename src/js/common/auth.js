@@ -5,17 +5,16 @@ import { ResponseCode } from 'js-wheel/dist/src/net/rest/ResponseCode';
 import LocalStorage from 'js-wheel/dist/src/utils/data/LocalStorage';
 import ConfigHandler from 'js-wheel/dist/src/config/ConfigHandler';
 import BaseMethods from 'js-wheel/dist/src/utils/data/BaseMethods';
-import WheelGlobal from 'js-wheel/dist/src/model/immutable/WheelGlobal';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 export async function handleAccessTokenExpire(deviceId, e, retryTimes) {
-    let refreshToken = await LocalStorage.readLocalStorage("x-refresh-token");
+    const refreshToken = await LocalStorage.readLocalStorage('x-refresh-token');
     const urlParams = {
         deviceId: deviceId,
         app: 1,
         refresh_token: refreshToken,
-        grant_type: 'refresh_token'
+        grant_type: 'refresh_token',
     };
     refreshAccessToken(urlParams, e, retryTimes);
 }
@@ -41,7 +40,7 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
                 const accessToken = res.result.accessToken;
                 chrome.storage.local.set(
                     {
-                        ["x-access-token"]: accessToken,
+                        'x-access-token': accessToken,
                     },
                     function () {
                         retryTimes = retryTimes + 1;
@@ -71,7 +70,7 @@ export function handleRefreshTokenExpire(params, e, retryTimes) {
                 deviceId: params.appdeviceId,
                 password: password,
                 refresh_token: params.refresh_token,
-                grant_type: 'refresh_token'
+                grant_type: 'refresh_token',
             };
             refreshRefreshToken(urlParams, e, retryTimes);
         });
@@ -112,8 +111,8 @@ export async function refreshRefreshToken(urlParams, e, retryTimes) {
                 const refreshToken = res.result.refreshToken;
                 chrome.storage.local.set(
                     {
-                        ["x-access-token"]: accessToken,
-                        ["x-refresh-token"]: refreshToken,
+                        'x-access-token': accessToken,
+                        'x-refresh-token': refreshToken,
                     },
                     function () {
                         retryTimes = retryTimes + 1;
