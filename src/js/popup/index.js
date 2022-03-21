@@ -1,11 +1,11 @@
-// import '../../css/popup.less';
+import '../../css/popup.less';
 import ClipboardJS from 'clipboard';
 import { getConfig } from '../common/config';
 import { subChannel } from '../common/cruise';
 import settingIcon from '../../svg/setting.svg';
 import aboutIcon from '../../svg/about.svg';
 import MD5 from 'md5.js';
-// import { Message } from 'element-ui';
+import { Message } from 'element-ui';
 let config;
 
 function generateList(type, list) {

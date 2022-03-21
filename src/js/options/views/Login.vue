@@ -18,6 +18,8 @@
 <script>
 
 import { defaultConfig, getConfig, saveConfig } from '../../common/config';
+import ConfigHandler from 'js-wheel/dist/src/config/configHandler';
+import AuthHandler from 'js-wheel/dist/src/auth/extension/AuthHandler';
 
 export default {
     name: 'Login',
@@ -49,7 +51,15 @@ export default {
                 username: this.username,
                 password: this.password
             },function(resp){
-                
+                let configBase = {
+                    appId: 8,
+                    baseAuthUrl: "https://api.poemhub.top",
+                    userLoginUrlPath: "/post/user/login",
+                    accessTokenUrlPath: "/post/auth/refresh_token/refresh",
+                    refreshTokenUrlPath: "/post/auth/access_token/refresh"
+                };
+                ConfigHandler.stupidInit(configBase);
+                AuthHandler.pluginLogin();
             });
         },
         toHotkey() {
