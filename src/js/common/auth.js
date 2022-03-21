@@ -8,15 +8,15 @@ import BaseMethods from 'js-wheel/dist/src/utils/data/BaseMethods';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-export async function handleAccessTokenExpire(deviceId, e, retryTimes) {
-    const refreshToken = await LocalStorage.readLocalStorage('x-refresh-token');
-    const urlParams = {
-        deviceId: deviceId,
-        app: 1,
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token',
-    };
-    refreshAccessToken(urlParams, e, retryTimes);
+export function handleAccessTokenExpire(deviceId, e, retryTimes) {
+    chrome.storage.local.get('refreshToken', (result) => {
+        const refreshToken = result.refreshToken;
+        const urlParams = {
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+        };
+        refreshAccessToken(urlParams, e, retryTimes);
+    });
 }
 
 export function refreshAccessToken(urlParams, e, retryTimes) {
@@ -31,11 +31,6 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
     })
         .then((res) => res.json())
         .then((res) => {
-            console.log(res);
-            if (res && res.resultCode === '00100100004017') {
-                // refresh token expired
-                handleRefreshTokenExpire(urlParams, e, retryTimes);
-            }
             if (res && res.resultCode === '200') {
                 const accessToken = res.result.accessToken;
                 chrome.storage.local.set(
@@ -51,7 +46,26 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
         });
 }
 
-export function handleRefreshTokenExpire(params, e, retryTimes) {
+// https://stackoverflow.com/questions/69983708/how-to-make-the-javascript-null-check-more-clear
+export function isNull(value) {
+    // any falsy value: https://developer.mozilla.org/en-US/docs/Glossary/Falsy
+    if (!value) {
+        return true;
+    }
+    if (typeof value === 'object') {
+        // empty array
+        if (Array.isArray(value) && value.length === 0) {
+            return true;
+        }
+        // empty object
+        if (value.toString() === '[object Object]' && JSON.stringify(value) === '{}') {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function handleRefreshTokenExpire(deviceId, e, retryTimes) {
     chrome.storage.local.get('username', (resp) => {
         const userName = resp.username;
         if (BaseMethods.isNull(userName)) {
