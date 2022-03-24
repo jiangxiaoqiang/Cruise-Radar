@@ -9,8 +9,8 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 export function handleAccessTokenExpire(deviceId, e, retryTimes) {
-    chrome.storage.local.get('refreshToken', (result) => {
-        const refreshToken = result.refreshToken;
+    chrome.storage.local.get('x-refresh-token', (result) => {
+        const refreshToken = result['x-refresh-token'];
         const urlParams = {
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
