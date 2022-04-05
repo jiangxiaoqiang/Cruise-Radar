@@ -7,6 +7,7 @@ import ConfigHandler from 'js-wheel/dist/src/config/ConfigHandler';
 import BaseMethods from 'js-wheel/dist/src/utils/data/BaseMethods';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { Message } from 'element-ui';
 
 export function handleAccessTokenExpire(deviceId, e, retryTimes) {
     chrome.storage.local.get('x-refresh-token', (result) => {
@@ -31,6 +32,9 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
     })
         .then((res) => res.json())
         .then((res) => {
+            if(res && res.resultCode !== '200'){
+                Message(res.msg);
+            }
             if (res && res.resultCode === '200') {
                 const accessToken = res.result.accessToken;
                 chrome.storage.local.set(
@@ -44,25 +48,6 @@ export function refreshAccessToken(urlParams, e, retryTimes) {
                 );
             }
         });
-}
-
-// https://stackoverflow.com/questions/69983708/how-to-make-the-javascript-null-check-more-clear
-export function isNull(value) {
-    // any falsy value: https://developer.mozilla.org/en-US/docs/Glossary/Falsy
-    if (!value) {
-        return true;
-    }
-    if (typeof value === 'object') {
-        // empty array
-        if (Array.isArray(value) && value.length === 0) {
-            return true;
-        }
-        // empty object
-        if (value.toString() === '[object Object]' && JSON.stringify(value) === '{}') {
-            return true;
-        }
-    }
-    return false;
 }
 
 export function handleRefreshTokenExpire(deviceId, e, retryTimes) {
