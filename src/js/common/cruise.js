@@ -4,6 +4,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { handleAccessTokenExpire } from '../common/auth';
 import { LoginType } from './enumn/loginType';
 import LocalStorage from 'js-wheel/dist/src/utils/data/LocalStorage';
+import { v4 as uuidv4 } from 'uuid';
 
 export function getDeviceFingerPrint(userName, password, e, retryTimes) {
     // Initialize an agent at application startup.
@@ -85,6 +86,7 @@ export function handleSub(urlParams, baseUrl, accessToken, e, retryTimes, device
         headers: {
             'Content-type': 'application/json',
             'x-access-token': accessToken,
+            'x-request-id': uuidv4(),
         },
         body: JSON.stringify(urlParams),
     })
@@ -94,7 +96,7 @@ export function handleSub(urlParams, baseUrl, accessToken, e, retryTimes, device
                 handleAccessTokenExpire(deviceId, e, retryTimes);
             } else if (res && res.resultCode === '00100100004014') {
                 chrome.storage.local.remove(['accessToken'], function () {});
-            } else if (res && res.result && res.statusCode === '200') {
+            } else if (res && res.result && res.statusCode === '200' && res.resultCode === '200') {
                 // 更新缓存订阅列表
                 const subList = res.result;
                 chrome.storage.local.set(
